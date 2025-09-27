@@ -52,6 +52,7 @@
         box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
       }
 
+      #cameraHint,
       #prompt {
         align-self: center;
         margin-bottom: 2rem;
@@ -66,6 +67,7 @@
         transition: opacity 0.2s ease, transform 0.25s ease;
       }
 
+      #cameraHint.visible,
       #prompt.visible {
         opacity: 1;
         transform: translateY(0);
@@ -121,6 +123,7 @@
     <canvas id="scene"></canvas>
     <div id="ui">
       <div id="title">It's a Dog's Life &mdash; Showgrounds Prototype</div>
+      <div id="cameraHint">Click to control the camera. Move the mouse to look around. Press Esc to release.</div>
       <div id="prompt"></div>
     </div>
     <div id="messagePanel">
@@ -439,6 +442,7 @@
       scene.add(handler);
 
       const prompt = document.getElementById("prompt");
+      const cameraHint = document.getElementById("cameraHint");
       const messagePanel = document.getElementById("messagePanel");
       const messageTitle = messagePanel.querySelector("h2");
       const messageBody = messagePanel.querySelector("p");
@@ -472,6 +476,42 @@
       }
 
       const pressedKeys = new Set();
+      const cameraState = {
+        yaw: Math.PI / 4,
+        radius: 90,
+        height: cameraHeight
+      };
+      const cameraOffset = new THREE.Vector3();
+      const cameraTarget = new THREE.Vector3();
+
+      function updateCameraHint(visible) {
+        if (visible) {
+          cameraHint.classList.add("visible");
+        } else {
+          cameraHint.classList.remove("visible");
+        }
+      }
+
+      updateCameraHint(true);
+
+      canvas.addEventListener("click", () => {
+        if (document.pointerLockElement !== canvas) {
+          canvas.requestPointerLock();
+        }
+      });
+
+      document.addEventListener("pointerlockchange", () => {
+        const locked = document.pointerLockElement === canvas;
+        updateCameraHint(!locked);
+      });
+
+      document.addEventListener("mousemove", (event) => {
+        if (document.pointerLockElement === canvas) {
+          const sensitivity = 0.0025;
+          cameraState.yaw -= event.movementX * sensitivity;
+          cameraState.yaw = (cameraState.yaw + Math.PI * 2) % (Math.PI * 2);
+        }
+      });
       window.addEventListener("keydown", (event) => {
         if (!event.repeat) pressedKeys.add(event.code);
         if (event.code === "Enter" && currentSign) {
@@ -539,9 +579,14 @@
         updateMovement(delta);
         updateInteraction();
 
-        camera.position.x = THREE.MathUtils.lerp(camera.position.x, handler.position.x, 0.08);
-        camera.position.z = THREE.MathUtils.lerp(camera.position.z, handler.position.z, 0.08);
-        camera.lookAt(handler.position.x, 0, handler.position.z);
+        cameraOffset.set(
+          Math.sin(cameraState.yaw) * cameraState.radius,
+          cameraState.height,
+          Math.cos(cameraState.yaw) * cameraState.radius
+        );
+        cameraTarget.copy(handler.position).add(cameraOffset);
+        camera.position.lerp(cameraTarget, 0.12);
+        camera.lookAt(handler.position.x, handler.position.y + 6, handler.position.z);
 
         renderer.render(scene, camera);
       }
