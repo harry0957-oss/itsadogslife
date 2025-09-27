@@ -495,10 +495,13 @@
       updateCameraHint(true);
 
       canvas.addEventListener("click", () => {
+        initializeAudio();
         if (document.pointerLockElement !== canvas) {
           canvas.requestPointerLock();
         }
       });
+
+      window.addEventListener("pointerdown", initializeAudio, { once: true });
 
       document.addEventListener("pointerlockchange", () => {
         const locked = document.pointerLockElement === canvas;
@@ -513,6 +516,7 @@
         }
       });
       window.addEventListener("keydown", (event) => {
+        initializeAudio();
         if (!event.repeat) pressedKeys.add(event.code);
         if (event.code === "Enter" && currentSign) {
           showMessage(currentSign);
@@ -536,6 +540,99 @@
         maxZ: groundSize * 0.48
       };
 
+      const pathRects = [
+        { center: new THREE.Vector2(0, 0), halfX: 14, halfZ: 100 },
+        { center: new THREE.Vector2(0, 0), halfX: 100, halfZ: 14 },
+        { center: new THREE.Vector2(-65, -65), halfX: 30, halfZ: 22 },
+        { center: new THREE.Vector2(65, -65), halfX: 30, halfZ: 22 },
+        { center: new THREE.Vector2(-65, 65), halfX: 30, halfZ: 22 },
+        { center: new THREE.Vector2(65, 65), halfX: 30, halfZ: 22 },
+        { center: new THREE.Vector2(0, -105), halfX: 20, halfZ: 40 },
+        { center: new THREE.Vector2(0, 105), halfX: 20, halfZ: 40 }
+      ];
+      const ringRadiusSq = 34 * 34;
+
+      function determineSurface(position) {
+        const x = position.x;
+        const z = position.z;
+        const inRing = x * x + z * z <= ringRadiusSq;
+        if (inRing) return "path";
+
+        for (const rect of pathRects) {
+          if (
+            Math.abs(x - rect.center.x) <= rect.halfX &&
+            Math.abs(z - rect.center.y) <= rect.halfZ
+          ) {
+            return "path";
+          }
+        }
+        return "grass";
+      }
+
+      const backgroundMusic = new Audio(
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/music/mapmusic.mp3"
+      );
+      const grassFootsteps = new Audio(
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/sounds/grasswalk.mp3"
+      );
+      const pathFootsteps = new Audio(
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/sounds/pathwalk.mp3"
+      );
+
+      let audioInitialized = false;
+      let activeFootsteps = null;
+
+      function primeFootstep(audio) {
+        audio.loop = true;
+        audio.play().then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        }).catch(() => {});
+      }
+
+      function initializeAudio() {
+        if (audioInitialized) return;
+        audioInitialized = true;
+
+        backgroundMusic.preload = "auto";
+        backgroundMusic.loop = true;
+        backgroundMusic.volume = 0.2;
+        backgroundMusic.play().catch(() => {});
+
+        grassFootsteps.preload = "auto";
+        grassFootsteps.volume = 0.4;
+        grassFootsteps.loop = true;
+        pathFootsteps.preload = "auto";
+        pathFootsteps.volume = 0.5;
+        pathFootsteps.loop = true;
+
+        primeFootstep(grassFootsteps);
+        primeFootstep(pathFootsteps);
+      }
+
+      function playFootsteps(surface) {
+        if (!audioInitialized) return;
+        const target = surface === "path" ? pathFootsteps : grassFootsteps;
+        if (activeFootsteps && activeFootsteps !== target) {
+          activeFootsteps.pause();
+          activeFootsteps.currentTime = 0;
+        }
+
+        activeFootsteps = target;
+        if (activeFootsteps.paused) {
+          activeFootsteps.play().catch(() => {});
+        }
+      }
+
+      function stopFootsteps() {
+        if (!audioInitialized) return;
+        if (activeFootsteps) {
+          activeFootsteps.pause();
+          activeFootsteps.currentTime = 0;
+          activeFootsteps = null;
+        }
+      }
+
       function updateMovement(delta) {
         movementVector.set(0, 0, 0);
         if (pressedKeys.has("ArrowUp") || pressedKeys.has("KeyW")) movementVector.z -= 1;
@@ -549,6 +646,11 @@
           handler.position.x = THREE.MathUtils.clamp(handler.position.x, bounds.minX, bounds.maxX);
           handler.position.z = THREE.MathUtils.clamp(handler.position.z, bounds.minZ, bounds.maxZ);
           handler.rotation.y = Math.atan2(movementVector.x, movementVector.z);
+
+          const surface = determineSurface(handler.position);
+          playFootsteps(surface);
+        } else {
+          stopFootsteps();
         }
       }
 
