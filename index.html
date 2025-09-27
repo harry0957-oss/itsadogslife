@@ -187,20 +187,45 @@
       return group;
     }
 
-    const housePositions = [
-      new THREE.Vector3(-100, 0, -80),
-      new THREE.Vector3(-60, 0, -120),
-      new THREE.Vector3(-120, 0, 40),
-      new THREE.Vector3(100, 0, -90),
-      new THREE.Vector3(70, 0, 80),
-      new THREE.Vector3(20, 0, 110)
+    const buildingColorPalette = [0xf7ede2, 0xf1dca7, 0xffddd2];
+    const buildings = [
+      {
+        name: 'Home',
+        message: 'Welcome home! Take a moment to rest before the next show.',
+        position: new THREE.Vector3(-100, 0, -80),
+        signOffset: new THREE.Vector3(0, 0, 18)
+      },
+      {
+        name: 'Pet Store',
+        message: 'Stock up on treats, toys, and pampering essentials.',
+        position: new THREE.Vector3(-60, 0, -120),
+        signOffset: new THREE.Vector3(0, 0, 18)
+      },
+      {
+        name: 'Veterinarian',
+        message: 'The best care in town for every champion pup.',
+        position: new THREE.Vector3(-120, 0, 40),
+        signOffset: new THREE.Vector3(0, 0, 18)
+      },
+      {
+        name: 'Dog Groomers',
+        message: 'Fresh trims, shining coats, and wagging tails guaranteed.',
+        position: new THREE.Vector3(100, 0, -90),
+        signOffset: new THREE.Vector3(0, 0, 18)
+      },
+      {
+        name: 'Dog Club',
+        message: 'Meet fellow handlers and share training tips over coffee.',
+        position: new THREE.Vector3(70, 0, 80),
+        signOffset: new THREE.Vector3(0, 0, 18)
+      },
+      {
+        name: 'Showground',
+        message: 'Where legends are made and ribbons are won.',
+        position: new THREE.Vector3(20, 0, 110),
+        signOffset: new THREE.Vector3(0, 0, 18)
+      }
     ];
-
-    housePositions.forEach((pos, index) => {
-      const colorPalette = [0xf7ede2, 0xf1dca7, 0xffddd2];
-      const house = createHouse(pos, colorPalette[index % colorPalette.length]);
-      scene.add(house);
-    });
 
     function createSign(position) {
       const signGroup = new THREE.Group();
@@ -225,48 +250,21 @@
       return signGroup;
     }
 
-    const signDetails = [
-      {
-        title: 'Home',
-        message: 'Welcome home! Take a moment to rest before the next show.',
-        position: housePositions[0].clone().add(new THREE.Vector3(0, 0, 18))
-      },
-      {
-        title: 'Pet Store',
-        message: 'Stock up on treats, toys, and pampering essentials.',
-        position: housePositions[1].clone().add(new THREE.Vector3(0, 0, 18))
-      },
-      {
-        title: 'Veterinarian',
-        message: 'The best care in town for every champion pup.',
-        position: housePositions[2].clone().add(new THREE.Vector3(0, 0, 18))
-      },
-      {
-        title: 'Dog Groomers',
-        message: 'Fresh trims, shining coats, and wagging tails guaranteed.',
-        position: housePositions[3].clone().add(new THREE.Vector3(0, 0, 18))
-      },
-      {
-        title: 'Dog Club',
-        message: 'Meet fellow handlers and share training tips over coffee.',
-        position: housePositions[4].clone().add(new THREE.Vector3(0, 0, 18))
-      },
-      {
-        title: 'Showground',
-        message: 'Where legends are made and ribbons are won.',
-        position: housePositions[5].clone().add(new THREE.Vector3(0, 0, 18))
-      }
-    ];
+    const signs = buildings.map((building, index) => {
+      const houseColor = buildingColorPalette[index % buildingColorPalette.length];
+      const house = createHouse(building.position, houseColor);
+      scene.add(house);
 
-    const signs = signDetails.map((detail) => {
-      const sign = createSign(detail.position);
+      const signPosition = building.position.clone().add(building.signOffset);
+      const sign = createSign(signPosition);
       scene.add(sign);
-      return { ...detail, mesh: sign };
+
+      return { title: building.name, message: building.message, mesh: sign };
     });
 
     const promptEl = document.getElementById('prompt');
     const signMessageEl = document.getElementById('signMessage');
-    let signMessageTimeout;
+    let signMessageTimeout = null;
     let nearbySign = null;
 
     // Player handler marker
@@ -292,17 +290,31 @@
     scene.add(handler);
 
     const keys = new Set();
+    function showSignMessage(sign) {
+      signMessageEl.textContent = `${sign.title}: ${sign.message}`;
+      signMessageEl.classList.add('visible');
+      clearTimeout(signMessageTimeout);
+      signMessageTimeout = setTimeout(() => {
+        hideSignMessage();
+      }, 4000);
+    }
+
+    function hideSignMessage() {
+      signMessageEl.classList.remove('visible');
+      signMessageEl.textContent = '';
+      clearTimeout(signMessageTimeout);
+      signMessageTimeout = null;
+    }
+
     window.addEventListener('keydown', (event) => {
       keys.add(event.code);
 
       if (event.code === 'Enter' && !event.repeat && nearbySign) {
-        signMessageEl.textContent = `${nearbySign.title}: ${nearbySign.message}`;
-        signMessageEl.classList.add('visible');
-        clearTimeout(signMessageTimeout);
-        signMessageTimeout = setTimeout(() => {
-          signMessageEl.classList.remove('visible');
-          signMessageEl.textContent = '';
-        }, 4000);
+        showSignMessage(nearbySign);
+      }
+
+      if (event.code === 'Escape') {
+        hideSignMessage();
       }
     });
 
@@ -347,7 +359,7 @@
       nearbySign = null;
       let closestDistance = Infinity;
       signs.forEach((sign) => {
-        const distance = handler.position.distanceTo(sign.position);
+        const distance = handler.position.distanceTo(sign.mesh.position);
         if (distance < closestDistance) {
           closestDistance = distance;
           nearbySign = sign;
@@ -362,6 +374,7 @@
         nearbySign = null;
         promptEl.textContent = '';
         promptEl.classList.remove('visible');
+        hideSignMessage();
       }
 
       camera.position.x = handler.position.x;
