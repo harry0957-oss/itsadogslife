@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minimal Phaser 3 Game</title>
+    <style>
+      body {
+        margin: 0;
+        background: #0b132b;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #f4f4f4;
+      }
 
+      #game-container {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.js"></script>
+    <script>
+      const GAME_WIDTH = 800;
+      const GAME_HEIGHT = 600;
+      const PLAYER_SIZE = 96;
+      const PLAYER_SPEED = 200;
+      const DOG_KEY = 'dog';
+
+      const config = {
+        type: Phaser.AUTO,
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
+        parent: 'game-container',
+        backgroundColor: '#1d3557',
+        physics: {
+          default: 'arcade',
+          arcade: {
+            gravity: { y: 0 },
+            debug: false
+          }
+        },
+        scene: {
+          preload,
+          create,
+          update
+        }
+      };
+
+      let cursors;
+      let player;
+
+      function preload() {
+        this.load.image(
+          DOG_KEY,
+          'https://labs.phaser.io/assets/sprites/dog.png'
+        );
+      }
+
+      function create() {
+        player = this.physics.add.sprite(
+          GAME_WIDTH / 2,
+          GAME_HEIGHT / 2,
+          DOG_KEY
+        );
+
+        player.setDisplaySize(PLAYER_SIZE, PLAYER_SIZE);
+        player.body.setSize(player.displayWidth, player.displayHeight, true);
+        player.setCollideWorldBounds(true);
+
+        cursors = this.input.keyboard.createCursorKeys();
+      }
+
+      function update() {
+        const body = player.body;
+
+        body.setVelocity(0);
+
+        if (cursors.left.isDown) {
+          body.setVelocityX(-PLAYER_SPEED);
+        } else if (cursors.right.isDown) {
+          body.setVelocityX(PLAYER_SPEED);
+        }
+
+        if (cursors.up.isDown) {
+          body.setVelocityY(-PLAYER_SPEED);
+        } else if (cursors.down.isDown) {
+          body.setVelocityY(PLAYER_SPEED);
+        }
+      }
+
+      new Phaser.Game(config);
+    </script>
+  </body>
+</html>
