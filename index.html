@@ -109,6 +109,28 @@
         margin: 0;
         white-space: pre-line;
       }
+
+      #musicToggle {
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 999px;
+        background: rgba(7, 11, 19, 0.75);
+        color: #f7fbff;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.35);
+        transition: background 0.2s ease, transform 0.2s ease;
+      }
+
+      #musicToggle:hover {
+        background: rgba(12, 18, 30, 0.85);
+        transform: translateY(-2px);
+      }
     </style>
     <script type="importmap">
       {
@@ -126,6 +148,7 @@
       <div id="cameraHint">Click to control the camera. Move the mouse to look around. Press Esc to release.</div>
       <div id="prompt"></div>
     </div>
+    <button id="musicToggle" type="button">Mute Music</button>
     <div id="messagePanel">
       <h2></h2>
       <p></p>
@@ -581,6 +604,7 @@
 
       let audioInitialized = false;
       let activeFootsteps = null;
+      let musicMuted = false;
 
       function primeFootstep(audio) {
         audio.loop = true;
@@ -596,11 +620,13 @@
 
         backgroundMusic.preload = "auto";
         backgroundMusic.loop = true;
-        backgroundMusic.volume = 0.2;
+        backgroundMusic.volume = 0.15;
+        backgroundMusic.muted = musicMuted;
         backgroundMusic.play().catch(() => {});
 
         grassFootsteps.preload = "auto";
-        grassFootsteps.volume = 0.4;
+        grassFootsteps.volume = 0.5;
+        grassFootsteps.playbackRate = 1.5;
         grassFootsteps.loop = true;
         pathFootsteps.preload = "auto";
         pathFootsteps.volume = 0.5;
@@ -609,6 +635,24 @@
         primeFootstep(grassFootsteps);
         primeFootstep(pathFootsteps);
       }
+
+      const musicToggle = document.getElementById("musicToggle");
+
+      function updateMusicToggleLabel() {
+        musicToggle.textContent = musicMuted ? "Unmute Music" : "Mute Music";
+      }
+
+      musicToggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        musicMuted = !musicMuted;
+        if (!audioInitialized) {
+          initializeAudio();
+        }
+        backgroundMusic.muted = musicMuted;
+        updateMusicToggleLabel();
+      });
+
+      updateMusicToggleLabel();
 
       function playFootsteps(surface) {
         if (!audioInitialized) return;
