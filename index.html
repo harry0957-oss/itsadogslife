@@ -3,62 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>It's a Dog's Life - Topdown Prototype</title>
+    <title>It's a Dog's Life</title>
     <style>
-      :root {
-        color-scheme: dark;
-      }
-      *, *::before, *::after { box-sizing: border-box; }
       html, body {
-        margin: 0; padding: 0; height: 100%;
+        margin: 0;
+        padding: 0;
+        height: 100%;
         overflow: hidden;
-        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
-        background: radial-gradient(circle at top, #86c5ff 0%, #112035 65%);
+        font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+        background: #1a1a1a;
       }
-      canvas { display: block; width: 100vw; height: 100vh; }
-      #ui {
-        position: fixed; inset: 0;
-        display: flex; flex-direction: column;
-        justify-content: space-between;
-        pointer-events: none;
-      }
-      #title {
-        margin: 1.5rem auto 0; padding: 0.75rem 1.5rem;
+
+      canvas { display: block; }
+
+      #hud {
+        position: fixed;
+        top: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.75rem 1.5rem;
         border-radius: 999px;
-        background: rgba(7, 11, 19, 0.55);
-        color: #f7fbff;
-        font-size: clamp(1rem, 2vw, 1.3rem);
-        letter-spacing: 0.08em; text-transform: uppercase;
-        box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
-      }
-      #prompt {
-        align-self: center; margin-bottom: 2rem;
-        padding: 0.85rem 1.65rem; border-radius: 0.95rem;
-        background: rgba(7, 11, 19, 0.7);
-        color: #f4f7fb; font-size: 0.95rem; letter-spacing: 0.04em;
-        transform: translateY(10px); opacity: 0;
-        transition: opacity 0.2s ease, transform 0.25s ease;
-      }
-      #prompt.visible { opacity: 1; transform: translateY(0); }
-      #messagePanel {
-        position: fixed; bottom: 3rem; left: 50%;
-        max-width: min(32rem, 90vw);
-        transform: translate(-50%, 10px);
-        padding: 1rem 1.5rem; border-radius: 1.1rem;
-        background: rgba(12, 15, 24, 0.92); color: #f6f7fb;
-        box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.45);
-        font-size: 1.05rem; line-height: 1.45;
-        letter-spacing: 0.015em; opacity: 0;
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
+        text-align: center;
+        font-size: 0.95rem;
+        letter-spacing: 0.03em;
+        box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.45);
+        user-select: none;
         pointer-events: none;
       }
-      #messagePanel.visible { opacity: 1; transform: translate(-50%, 0); }
-      #messagePanel h2 {
-        margin: 0 0 0.4rem; font-size: 1.15rem;
-        letter-spacing: 0.06em; text-transform: uppercase;
-        color: #ffd166;
+
+      #prompt,
+      #signMessage {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.6rem 1.2rem;
+        border-radius: 0.75rem;
+        background: rgba(0, 0, 0, 0.65);
+        color: #fff;
+        text-align: center;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+        max-width: 80vw;
       }
-      #messagePanel p { margin: 0; }
+
+      #prompt { bottom: 4.5rem; }
+      #signMessage { bottom: 2rem; }
+
+      #prompt.visible,
+      #signMessage.visible {
+        opacity: 1;
+      }
     </style>
     <script type="importmap">
       {
@@ -71,19 +70,273 @@
   </head>
   <body>
     <canvas id="scene"></canvas>
-    <div id="ui">
-      <div id="title">It's a Dog's Life &mdash; Showgrounds Prototype</div>
-      <div id="prompt"></div>
+    <div id="hud">
+      Use WASD or arrow keys to move your handler around the show grounds. Press Enter near a sign to read it.
     </div>
-    <div id="messagePanel">
-      <h2></h2>
-      <p></p>
-    </div>
+    <div id="prompt"></div>
+    <div id="signMessage"></div>
 
     <script type="module">
-      import * as THREE from "three";
-      // (all the big Codex JS logic: ground, plaza, paths, buildings, signs, shrubs, handler, movement, interaction, etc.)
-      // Keep everything from the Codex block you pasted BEFORE the "=======" marker.
+      import * as THREE from 'three';
+
+      const canvas = document.getElementById('scene');
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x87ceeb);
+
+      const aspect = window.innerWidth / window.innerHeight;
+      const cameraSize = 75;
+      const camera = new THREE.OrthographicCamera(
+        -cameraSize * aspect,
+        cameraSize * aspect,
+        cameraSize,
+        -cameraSize,
+        0.1,
+        1000
+      );
+      const cameraHeight = 120;
+      camera.position.set(0, cameraHeight, 0);
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+      const ambient = new THREE.AmbientLight(0xffffff, 0.85);
+      scene.add(ambient);
+
+      const sun = new THREE.DirectionalLight(0xffffff, 0.65);
+      sun.position.set(80, 150, 100);
+      sun.castShadow = true;
+      sun.shadow.mapSize.set(1024, 1024);
+      scene.add(sun);
+
+      const groundSize = 220;
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(groundSize, groundSize),
+        new THREE.MeshLambertMaterial({ color: 0x2d6a4f })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      // Show ring
+      const showRing = new THREE.Mesh(
+        new THREE.CircleGeometry(38, 48),
+        new THREE.MeshLambertMaterial({ color: 0xd6a561 })
+      );
+      showRing.rotation.x = -Math.PI / 2;
+      showRing.position.set(0, 0.01, 0);
+      showRing.receiveShadow = true;
+      scene.add(showRing);
+
+      // Paths
+      const pathMaterial = new THREE.MeshLambertMaterial({ color: 0xb5b0a1 });
+      const mainPath = new THREE.Mesh(new THREE.PlaneGeometry(30, groundSize), pathMaterial);
+      mainPath.rotation.x = -Math.PI / 2;
+      mainPath.position.set(-60, 0.02, 0);
+      scene.add(mainPath);
+
+      const crossPath = new THREE.Mesh(new THREE.PlaneGeometry(groundSize, 28), pathMaterial);
+      crossPath.rotation.x = -Math.PI / 2;
+      crossPath.position.set(0, 0.02, 60);
+      scene.add(crossPath);
+
+      function createHouse(position, color = 0xf7ede2) {
+        const group = new THREE.Group();
+        const houseBase = new THREE.Mesh(
+          new THREE.BoxGeometry(20, 14, 20),
+          new THREE.MeshLambertMaterial({ color })
+        );
+        houseBase.castShadow = true;
+        houseBase.receiveShadow = true;
+        houseBase.position.y = 7;
+        group.add(houseBase);
+
+        const roof = new THREE.Mesh(
+          new THREE.ConeGeometry(16, 10, 4),
+          new THREE.MeshLambertMaterial({ color: 0xc44536 })
+        );
+        roof.castShadow = true;
+        roof.position.y = 12;
+        roof.rotation.y = Math.PI / 4;
+        group.add(roof);
+
+        const doorway = new THREE.Mesh(
+          new THREE.BoxGeometry(5, 7, 1.5),
+          new THREE.MeshLambertMaterial({ color: 0x1d3557 })
+        );
+        doorway.position.set(0, 3, 10.5);
+        doorway.castShadow = true;
+        group.add(doorway);
+
+        group.position.copy(position);
+        return group;
+      }
+
+      const buildingColorPalette = [0xf7ede2, 0xf1dca7, 0xffddd2];
+      const buildings = [
+        { name: 'Home', message: 'Welcome home! Take a moment to rest before the next show.', position: new THREE.Vector3(-100, 0, -80), signOffset: new THREE.Vector3(0, 0, 18) },
+        { name: 'Pet Store', message: 'Stock up on treats, toys, and pampering essentials.', position: new THREE.Vector3(-60, 0, -120), signOffset: new THREE.Vector3(0, 0, 18) },
+        { name: 'Veterinarian', message: 'The best care in town for every champion pup.', position: new THREE.Vector3(-120, 0, 40), signOffset: new THREE.Vector3(0, 0, 18) },
+        { name: 'Dog Groomers', message: 'Fresh trims, shining coats, and wagging tails guaranteed.', position: new THREE.Vector3(100, 0, -90), signOffset: new THREE.Vector3(0, 0, 18) },
+        { name: 'Dog Club', message: 'Meet fellow handlers and share training tips over coffee.', position: new THREE.Vector3(70, 0, 80), signOffset: new THREE.Vector3(0, 0, 18) },
+        { name: 'Showground', message: 'Where legends are made and ribbons are won.', position: new THREE.Vector3(20, 0, 110), signOffset: new THREE.Vector3(0, 0, 18) }
+      ];
+
+      function createSign(position) {
+        const group = new THREE.Group();
+        const post = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.8, 1.2, 12, 12),
+          new THREE.MeshLambertMaterial({ color: 0x8d5524 })
+        );
+        post.castShadow = true;
+        post.position.y = 6;
+        group.add(post);
+
+        const board = new THREE.Mesh(
+          new THREE.BoxGeometry(8, 4, 1),
+          new THREE.MeshLambertMaterial({ color: 0xfff3b0 })
+        );
+        board.castShadow = true;
+        board.position.set(0, 10, 0.5);
+        group.add(board);
+
+        group.position.copy(position);
+        return group;
+      }
+
+      const signs = buildings.map((b, i) => {
+        const house = createHouse(b.position, buildingColorPalette[i % buildingColorPalette.length]);
+        scene.add(house);
+
+        const sign = createSign(b.position.clone().add(b.signOffset));
+        scene.add(sign);
+
+        return { title: b.name, message: b.message, mesh: sign };
+      });
+
+      const promptEl = document.getElementById('prompt');
+      const signMessageEl = document.getElementById('signMessage');
+      let signMessageTimeout = null;
+      let nearbySign = null;
+
+      // Handler
+      const handler = new THREE.Group();
+      const handlerBase = new THREE.Mesh(
+        new THREE.CylinderGeometry(4, 4, 4, 24),
+        new THREE.MeshLambertMaterial({ color: 0xffbe0b })
+      );
+      handlerBase.position.y = 2;
+      handler.add(handlerBase);
+
+      const handlerHead = new THREE.Mesh(
+        new THREE.SphereGeometry(2.6, 24, 24),
+        new THREE.MeshLambertMaterial({ color: 0xf4a261 })
+      );
+      handlerHead.position.y = 5.3;
+      handler.add(handlerHead);
+
+      handler.position.set(-60, 0, 0);
+      scene.add(handler);
+
+      const keys = new Set();
+
+      function showSignMessage(sign) {
+        signMessageEl.textContent = `${sign.title}: ${sign.message}`;
+        signMessageEl.classList.add('visible');
+        clearTimeout(signMessageTimeout);
+        signMessageTimeout = setTimeout(() => hideSignMessage(), 4000);
+      }
+
+      function hideSignMessage() {
+        signMessageEl.classList.remove('visible');
+        signMessageEl.textContent = '';
+        clearTimeout(signMessageTimeout);
+        signMessageTimeout = null;
+      }
+
+      window.addEventListener('keydown', (event) => {
+        keys.add(event.code);
+        if (event.code === 'Enter' && !event.repeat && nearbySign) showSignMessage(nearbySign);
+        if (event.code === 'Escape') hideSignMessage();
+      });
+
+      window.addEventListener('keyup', (event) => {
+        keys.delete(event.code);
+      });
+
+      const clock = new THREE.Clock();
+      const speed = 35;
+      const bounds = {
+        minX: -groundSize / 2 + 10,
+        maxX: groundSize / 2 - 10,
+        minZ: -groundSize / 2 + 10,
+        maxZ: groundSize / 2 - 10
+      };
+
+      function handleMovement(delta) {
+        let dx = 0, dz = 0;
+        if (keys.has('ArrowUp') || keys.has('KeyW')) dz -= 1;
+        if (keys.has('ArrowDown') || keys.has('KeyS')) dz += 1;
+        if (keys.has('ArrowLeft') || keys.has('KeyA')) dx -= 1;
+        if (keys.has('ArrowRight') || keys.has('KeyD')) dx += 1;
+
+        const dir = new THREE.Vector3(dx, 0, dz);
+        if (dir.lengthSq() > 0) {
+          dir.normalize();
+          handler.position.addScaledVector(dir, speed * delta);
+          handler.position.x = THREE.MathUtils.clamp(handler.position.x, bounds.minX, bounds.maxX);
+          handler.position.z = THREE.MathUtils.clamp(handler.position.z, bounds.minZ, bounds.maxZ);
+          handler.rotation.y = Math.atan2(dir.x, dir.z);
+        }
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const delta = clock.getDelta();
+        handleMovement(delta);
+
+        nearbySign = null;
+        let minDist = Infinity;
+        signs.forEach(sign => {
+          const d = handler.position.distanceTo(sign.mesh.position);
+          if (d < minDist) {
+            minDist = d;
+            nearbySign = sign;
+          }
+        });
+
+        if (nearbySign && minDist < 22) {
+          promptEl.textContent = `Press Enter to read the ${nearbySign.title} sign.`;
+          promptEl.classList.add('visible');
+        } else {
+          nearbySign = null;
+          promptEl.textContent = '';
+          promptEl.classList.remove('visible');
+          hideSignMessage();
+        }
+
+        camera.position.x = handler.position.x;
+        camera.position.z = handler.position.z;
+        camera.lookAt(handler.position.x, 0, handler.position.z);
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      function onResize() {
+        const aspectRatio = window.innerWidth / window.innerHeight;
+        camera.left = -cameraSize * aspectRatio;
+        camera.right = cameraSize * aspectRatio;
+        camera.top = cameraSize;
+        camera.bottom = -cameraSize;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      window.addEventListener('resize', onResize);
+      onResize();
     </script>
   </body>
 </html>
