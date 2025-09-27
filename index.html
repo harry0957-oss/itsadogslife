@@ -1,48 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>It's a Dog's Life</title>
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
-</head>
-<body>
-<script>
-  const config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    backgroundColor: '#87ceeb',
-    physics: {
-      default: 'arcade',
-      arcade: { debug: false }
-    },
-    scene: { preload, create, update }
-  };
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>It's a Dog's Life - Topdown Prototype</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
 
-  let player;
-  let cursors;
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
 
-  const game = new Phaser.Game(config);
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        background: radial-gradient(circle at top, #86c5ff 0%, #112035 65%);
+      }
 
-  function preload() {}
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+      }
 
-  function create() {
-    player = this.add.rectangle(400, 300, 40, 40, 0xff0000);
-    this.physics.add.existing(player);
-    player.body.setCollideWorldBounds(true);
+      #ui {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        pointer-events: none;
+      }
 
-    cursors = this.input.keyboard.createCursorKeys();
-  }
+      #title {
+        margin: 1.5rem auto 0;
+        padding: 0.75rem 1.5rem;
+        border-radius: 999px;
+        background: rgba(7, 11, 19, 0.55);
+        color: #f7fbff;
+        font-size: clamp(1rem, 2vw, 1.3rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
+      }
 
-  function update() {
-    player.body.setVelocity(0);
+      #prompt {
+        align-self: center;
+        margin-bottom: 2rem;
+        padding: 0.85rem 1.65rem;
+        border-radius: 0.95rem;
+        background: rgba(7, 11, 19, 0.7);
+        color: #f4f7fb;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        transform: translateY(10px);
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.25s ease;
+      }
 
-    if (cursors.left.isDown) player.body.setVelocityX(-200);
-    else if (cursors.right.isDown) player.body.setVelocityX(200);
+      #prompt.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
 
-    if (cursors.up.isDown) player.body.setVelocityY(-200);
-    else if (cursors.down.isDown) player.body.setVelocityY(200);
-  }
-</script>
-</body>
+      #messagePanel {
+        position: fixed;
+        bottom: 3rem;
+        left: 50%;
+        max-width: min(32rem, 90vw);
+        transform: translate(-50%, 10px);
+        padding: 1rem 1.5rem;
+        border-radius: 1.1rem;
+        background: rgba(12, 15, 24, 0.92);
+        color: #f6f7fb;
+        box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.45);
+        font-size: 1.05rem;
+        line-height: 1.45;
+        letter-spacing: 0.015em;
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+      }
+
+      #messagePanel.visible {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      #messagePanel h2 {
+        margin: 0 0 0.4rem;
+        font-size: 1.15rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #ffd166;
+      }
+
+      #messagePanel p {
+        margin: 0;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
+    <div id="ui">
+      <div id="title">It's a Dog's Life &mdash; Showgrounds Prototype</div>
+      <div id="prompt"></div>
+    </div>
+    <div id="messagePanel">
+      <h2></h2>
+      <p></p>
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+
+      const canvas = document.getElementById("scene");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x7fc8f8);
+
+      const aspect = window.innerWidth / window.innerHeight;
+      const viewSize = 80;
+      const camera = new THREE.OrthographicCamera(
+        -viewSize * aspect,
+        viewSize * aspect,
+        viewSize,
+        -viewSize,
+        0.1,
+        500
+      );
+      const cameraHeight = 120;
+      camera.position.set(0, cameraHeight, 0);
+      camera.lookAt(0, 0, 0);
+
+      const hemi = new THREE.HemisphereLight(0xf9f9ff, 0x28432f, 0.85);
+      scene.add(hemi);
+
+      const sun = new THREE.DirectionalLight(0xffffff, 0.85);
+      sun.position.set(80, 150, 60);
+      sun.castShadow = true;
+      sun.shadow.mapSize.set(2048, 2048);
+      sun.shadow.camera.left = -150;
+      sun.shadow.camera.right = 150;
+      sun.shadow.camera.top = 150;
+      sun.shadow.camera.bottom = -150;
+      scene.add(sun);
+
+      const groundSize = 260;
+      const grass = new THREE.Mesh(
+        new THREE.PlaneGeometry(groundSize, groundSize),
+        new THREE.MeshLambertMaterial({ color: 0x2a9134 })
+      );
+      grass.rotation.x = -Math.PI / 2;
+      grass.receiveShadow = true;
+      scene.add(grass);
+
+      function createRect(width, depth, color, height = 0.05) {
+        const mesh = new THREE.Mesh(
+          new THREE.BoxGeometry(width, height, depth),
+          new THREE.MeshLambertMaterial({ color })
+        );
+        mesh.castShadow = false;
+        mesh.receiveShadow = true;
+        mesh.position.y = height / 2;
+        return mesh;
+      }
+
+      const pathColor = 0xd1c4a4;
+      const plaza = createRect(110, 110, 0xcabfab, 0.4);
+      scene.add(plaza);
+
+      const northPath = createRect(18, 120, pathColor, 0.35);
+      northPath.position.set(0, 0.2, -90);
+      scene.add(northPath);
+
+      const southPath = createRect(18, 120, pathColor, 0.35);
+      southPath.position.set(0, 0.2, 90);
+      scene.add(southPath);
+
+      const eastPath = createRect(120, 18, pathColor, 0.35);
+      eastPath.position.set(90, 0.2, 0);
+      scene.add(eastPath);
+
+      const westPath = createRect(120, 18, pathColor, 0.35);
+      westPath.position.set(-90, 0.2, 0);
+      scene.add(westPath);
+
+      const ringBorder = new THREE.Mesh(
+        new THREE.CylinderGeometry(35, 35, 1.4, 64, 1, true),
+        new THREE.MeshLambertMaterial({ color: 0x3a2c1f, side: THREE.DoubleSide })
+      );
+      ringBorder.position.y = 0.7;
+      scene.add(ringBorder);
+
+      const ringFloor = new THREE.Mesh(
+        new THREE.CircleGeometry(34, 48),
+        new THREE.MeshLambertMaterial({ color: 0xd9c097 })
+      );
+      ringFloor.rotation.x = -Math.PI / 2;
+      ringFloor.position.y = 0.05;
+      ringFloor.receiveShadow = true;
+      scene.add(ringFloor);
+
+      const bleacherMaterial = new THREE.MeshLambertMaterial({ color: 0xe6e0d6 });
+      for (let i = 0; i < 4; i++) {
+        const bench = new THREE.Mesh(
+          new THREE.BoxGeometry(12, 2, 4),
+          bleacherMaterial
+        );
+        bench.position.set(Math.cos((i / 4) * Math.PI * 2) * 42, 1, Math.sin((i / 4) * Math.PI * 2) * 42);
+        bench.rotation.y = ((i + 2) * Math.PI) / 4;
+        bench.castShadow = true;
+        bench.receiveShadow = true;
+        scene.add(bench);
+      }
+
+      function createHouse({ color, trimColor, roofColor }) {
+        const group = new THREE.Group();
+
+        const base = new THREE.Mesh(
+          new THREE.BoxGeometry(22, 16, 20),
+          new THREE.MeshLambertMaterial({ color })
+        );
+        base.position.y = 8;
+        base.castShadow = true;
+        base.receiveShadow = true;
+        group.add(base);
+
+        const roof = new THREE.Mesh(
+          new THREE.ConeGeometry(18, 10, 4),
+          new THREE.MeshLambertMaterial({ color: roofColor })
+        );
+        roof.position.y = 18;
+        roof.rotation.y = Math.PI / 4;
+        roof.castShadow = true;
+        group.add(roof);
+
+        const door = new THREE.Mesh(
+          new THREE.BoxGeometry(5, 8, 1.4),
+          new THREE.MeshLambertMaterial({ color: trimColor })
+        );
+        door.position.set(0, 4, 10.7);
+        door.castShadow = true;
+        group.add(door);
+
+        const windowGeometry = new THREE.BoxGeometry(4, 4, 1.2);
+        const windowMaterial = new THREE.MeshLambertMaterial({ color: 0xf1f6ff });
+        const windowPositions = [
+          [-8, 6, 10.4],
+          [8, 6, 10.4]
+        ];
+        windowPositions.forEach(([x, y, z]) => {
+          const window = new THREE.Mesh(windowGeometry, windowMaterial);
+          window.position.set(x, y, z);
+          window.castShadow = true;
+          group.add(window);
+        });
+
+        return group;
+      }
+
+      function createSign() {
+        const group = new THREE.Group();
+
+        const post = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.9, 1.1, 12, 12),
+          new THREE.MeshLambertMaterial({ color: 0x8c5627 })
+        );
+        post.position.y = 6;
+        post.castShadow = true;
+        group.add(post);
+
+        const plank = new THREE.Mesh(
+          new THREE.BoxGeometry(9, 4.2, 1.1),
+          new THREE.MeshLambertMaterial({ color: 0xfff5b5 })
+        );
+        plank.position.set(0, 10, 0.4);
+        plank.castShadow = true;
+        group.add(plank);
+
+        return group;
+      }
+
+      const buildingPalette = [
+        { color: 0xfef3c7, trimColor: 0x1d3557, roofColor: 0xb56576 },
+        { color: 0xe0f2ff, trimColor: 0x264653, roofColor: 0x457b9d },
+        { color: 0xfdecef, trimColor: 0x2a9d8f, roofColor: 0xe76f51 },
+        { color: 0xfff4e6, trimColor: 0x6d597a, roofColor: 0xb56576 },
+        { color: 0xf0fff1, trimColor: 0x355070, roofColor: 0x6d597a },
+        { color: 0xe9f5db, trimColor: 0x1f3c88, roofColor: 0x577590 }
+      ];
+
+      const buildingData = [
+        {
+          title: "Home",
+          description: "Your cozy base to rest, review scores, and plan the next showcase.",
+          position: new THREE.Vector3(-110, 0, -90),
+          signOffset: new THREE.Vector3(0, 0, 20)
+        },
+        {
+          title: "Pet Store",
+          description: "Pick up gourmet treats and dazzling outfits for your canine stars.",
+          position: new THREE.Vector3(-60, 0, 120),
+          signOffset: new THREE.Vector3(16, 0, 10)
+        },
+        {
+          title: "Veterinarian",
+          description: "Routine checkups and wellness boosts keep tails wagging in the ring.",
+          position: new THREE.Vector3(-150, 0, 40),
+          signOffset: new THREE.Vector3(20, 0, 0)
+        },
+        {
+          title: "Dog Groomers",
+          description: "Fresh trims, shimmering coats, and bow-tie flair for every breed.",
+          position: new THREE.Vector3(100, 0, -110),
+          signOffset: new THREE.Vector3(-20, 0, 12)
+        },
+        {
+          title: "Dog Club",
+          description: "Trade training stories, compare ribbons, and challenge rivals to showdowns.",
+          position: new THREE.Vector3(110, 0, 90),
+          signOffset: new THREE.Vector3(-10, 0, -18)
+        },
+        {
+          title: "Showground",
+          description: "The main arena where perfect gaits and confident poses win the judges over.",
+          position: new THREE.Vector3(0, 0, 0),
+          signOffset: new THREE.Vector3(30, 0, -4)
+        }
+      ];
+
+      const signEntries = buildingData.map((data, index) => {
+        const palette = buildingPalette[index % buildingPalette.length];
+        const house = createHouse(palette);
+        house.position.copy(data.position);
+        scene.add(house);
+
+        const sign = createSign();
+        sign.position.copy(data.position.clone().add(data.signOffset));
+        scene.add(sign);
+
+        return {
+          mesh: sign,
+          title: data.title,
+          description: data.description
+        };
+      });
+
+      const shrubMaterial = new THREE.MeshLambertMaterial({ color: 0x1e6f3b });
+      for (let i = 0; i < 30; i++) {
+        const shrub = new THREE.Mesh(
+          new THREE.SphereGeometry(THREE.MathUtils.randFloat(2, 4), 12, 12),
+          shrubMaterial
+        );
+        shrub.position.set(
+          THREE.MathUtils.randFloatSpread(groundSize * 0.85),
+          THREE.MathUtils.randFloat(1, 3),
+          THREE.MathUtils.randFloatSpread(groundSize * 0.85)
+        );
+        shrub.castShadow = true;
+        shrub.receiveShadow = true;
+        scene.add(shrub);
+      }
+
+      const handler = new THREE.Group();
+      const handlerBase = new THREE.Mesh(
+        new THREE.CylinderGeometry(3, 4, 4, 24),
+        new THREE.MeshLambertMaterial({ color: 0xffb703 })
+      );
+      handlerBase.position.y = 2;
+      handlerBase.castShadow = true;
+      handler.add(handlerBase);
+
+      const handlerHead = new THREE.Mesh(
+        new THREE.SphereGeometry(2.5, 24, 24),
+        new THREE.MeshLambertMaterial({ color: 0xf77f00 })
+      );
+      handlerHead.position.y = 5;
+      handlerHead.castShadow = true;
+      handler.add(handlerHead);
+
+      const leash = new THREE.Mesh(
+        new THREE.TorusGeometry(3.6, 0.3, 12, 32),
+        new THREE.MeshLambertMaterial({ color: 0x6a4c93 })
+      );
+      leash.rotation.x = Math.PI / 2;
+      leash.position.y = 4.1;
+      handler.add(leash);
+
+      handler.position.set(-40, 0, 40);
+      scene.add(handler);
+
+      const prompt = document.getElementById("prompt");
+      const messagePanel = document.getElementById("messagePanel");
+      const messageTitle = messagePanel.querySelector("h2");
+      const messageBody = messagePanel.querySelector("p");
+
+      let currentSign = null;
+      let hideTimeout = null;
+
+      function showPrompt(text) {
+        prompt.textContent = text;
+        prompt.classList.add("visible");
+      }
+
+      function hidePrompt() {
+        prompt.classList.remove("visible");
+        prompt.textContent = "";
+      }
+
+      function showMessage({ title, description }) {
+        messageTitle.textContent = title;
+        messageBody.textContent = description;
+        messagePanel.classList.add("visible");
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => hideMessage(), 5000);
+      }
+
+      function hideMessage() {
+        messagePanel.classList.remove("visible");
+        messageTitle.textContent = "";
+        messageBody.textContent = "";
+        clearTimeout(hideTimeout);
+      }
+
+      const pressedKeys = new Set();
+      window.addEventListener("keydown", (event) => {
+        if (!event.repeat) pressedKeys.add(event.code);
+        if (event.code === "Enter" && currentSign) {
+          showMessage(currentSign);
+        }
+        if (event.code === "Escape") {
+          hideMessage();
+        }
+      });
+
+      window.addEventListener("keyup", (event) => {
+        pressedKeys.delete(event.code);
+      });
+
+      const clock = new THREE.Clock();
+      const speed = 42;
+      const movementVector = new THREE.Vector3();
+      const bounds = {
+        minX: -groundSize * 0.48,
+        maxX: groundSize * 0.48,
+        minZ: -groundSize * 0.48,
+        maxZ: groundSize * 0.48
+      };
+
+      function updateMovement(delta) {
+        movementVector.set(0, 0, 0);
+        if (pressedKeys.has("ArrowUp") || pressedKeys.has("KeyW")) movementVector.z -= 1;
+        if (pressedKeys.has("ArrowDown") || pressedKeys.has("KeyS")) movementVector.z += 1;
+        if (pressedKeys.has("ArrowLeft") || pressedKeys.has("KeyA")) movementVector.x -= 1;
+        if (pressedKeys.has("ArrowRight") || pressedKeys.has("KeyD")) movementVector.x += 1;
+
+        if (movementVector.lengthSq() > 0) {
+          movementVector.normalize().multiplyScalar(speed * delta);
+          handler.position.add(movementVector);
+          handler.position.x = THREE.MathUtils.clamp(handler.position.x, bounds.minX, bounds.maxX);
+          handler.position.z = THREE.MathUtils.clamp(handler.position.z, bounds.minZ, bounds.maxZ);
+          handler.rotation.y = Math.atan2(movementVector.x, movementVector.z);
+        }
+      }
+
+      function updateInteraction() {
+        let closest = null;
+        let minDistance = Infinity;
+        signEntries.forEach((sign) => {
+          const distance = handler.position.distanceTo(sign.mesh.position);
+          if (distance < minDistance) {
+            minDistance = distance;
+            closest = sign;
+          }
+        });
+
+        const interactDistance = 22;
+        if (closest && minDistance < interactDistance) {
+          currentSign = closest;
+          showPrompt(`Press Enter to read the ${closest.title} sign`);
+        } else {
+          currentSign = null;
+          hidePrompt();
+        }
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const delta = clock.getDelta();
+        updateMovement(delta);
+        updateInteraction();
+
+        camera.position.x = THREE.MathUtils.lerp(camera.position.x, handler.position.x, 0.08);
+        camera.position.z = THREE.MathUtils.lerp(camera.position.z, handler.position.z, 0.08);
+        camera.lookAt(handler.position.x, 0, handler.position.z);
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      function handleResize() {
+        const aspectRatio = window.innerWidth / window.innerHeight;
+        camera.left = -viewSize * aspectRatio;
+        camera.right = viewSize * aspectRatio;
+        camera.top = viewSize;
+        camera.bottom = -viewSize;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      window.addEventListener("resize", handleResize);
+      handleResize();
+    </script>
+  </body>
 </html>
