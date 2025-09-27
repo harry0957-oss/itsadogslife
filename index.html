@@ -16,11 +16,7 @@
       default: 'arcade',
       arcade: { debug: false }
     },
-    scene: {
-      preload: preload,
-      create: create,
-      update: update
-    }
+    scene: { preload, create, update }
   };
 
   let player;
@@ -28,9 +24,7 @@
 
   const game = new Phaser.Game(config);
 
-  function preload() {
-    this.graphics = this.add.graphics();
-  }
+  function preload() {}
 
   function create() {
     player = this.add.rectangle(400, 300, 40, 40, 0xff0000);
@@ -43,18 +37,12 @@
   function update() {
     player.body.setVelocity(0);
 
-    if (cursors.left.isDown) {
-      player.body.setVelocityX(-200);
-    } else if (cursors.right.isDown) {
-      player.body.setVelocityX(200);
-    }
-    if (cursors.up.isDown) {
-      player.body.setVelocityY(-200);
-    } else if (cursors.down.isDown) {
-      player.body.setVelocityY(200);
-    }
+    if (cursors.left.isDown) player.body.setVelocityX(-200);
+    else if (cursors.right.isDown) player.body.setVelocityX(200);
+
+    if (cursors.up.isDown) player.body.setVelocityY(-200);
+    else if (cursors.down.isDown) player.body.setVelocityY(200);
   }
 </script>
 </body>
 </html>
-
