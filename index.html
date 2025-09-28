@@ -567,6 +567,19 @@
           hidePrompt();
         }
       }
+ const backgroundMusic = new Audio(
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/music/mapmusic.mp3"
+      );
+      const grassFootsteps = new Audio(
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/sounds/grasswalk.mp3"
+      );
+      const pathFootsteps = new Audio(
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/sounds/pathwalk.mp3"
+      );
+
+      let audioInitialized = false;
+      let activeFootsteps = null;
+      let musicMuted = false;
 
       function updateMusicToggleLabel() {
         musicToggle.textContent = musicMuted ? "Unmute Music" : "Mute Music";
@@ -584,20 +597,7 @@
 
       updateMusicToggleLabel();
 
-      const backgroundMusic = new Audio(
-        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/music/mapmusic.mp3"
-      );
-      const grassFootsteps = new Audio(
-        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/sounds/grasswalk.mp3"
-      );
-      const pathFootsteps = new Audio(
-        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/sounds/pathwalk.mp3"
-      );
-
-      let audioInitialized = false;
-      let activeFootsteps = null;
-      let musicMuted = false;
-
+      
       function primeFootstep(audio) {
         audio.loop = true;
         audio.play().then(() => {
