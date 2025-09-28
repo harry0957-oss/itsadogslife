@@ -22,12 +22,12 @@ export function createMapState() {
     spawnPosition: new THREE.Vector3(0, 0, 0),
     tileToWorld(col, row, y = 0) {
       const x = this.minX + this.tileWorldSize * col + this.tileWorldSize * 0.5;
-      const z = this.maxZ - this.tileWorldSize * row - this.tileWorldSize * 0.5;
+      const z = this.minZ + this.tileWorldSize * row + this.tileWorldSize * 0.5;
       return new THREE.Vector3(x, y, z);
     },
     worldToTile(x, z) {
       const col = Math.floor((x - this.minX) / this.tileWorldSize);
-      const row = Math.floor((this.maxZ - z) / this.tileWorldSize);
+      const row = Math.floor((z - this.minZ) / this.tileWorldSize);
       return { col, row };
     }
   };
@@ -122,7 +122,10 @@ export async function buildLevelFromData(
 
   surfaceGrid.length = height;
   for (let row = 0; row < height; row++) {
-    surfaceGrid[row] = new Array(width).fill("grass");
+    surfaceGrid[row] = [];
+    for (let col = 0; col < width; col++) {
+      surfaceGrid[row][col] = { surface: "grass", collides: false };
+    }
   }
 
   const tilesetEntries = Object.entries(data.tilesets ?? {});
@@ -188,8 +191,14 @@ export async function buildLevelFromData(
         mesh.position.y = 0;
         group.add(mesh);
 
-        if (tileDef.surface) {
-          surfaceGrid[row][col] = tileDef.surface;
+        const info = surfaceGrid[row]?.[col];
+        if (info) {
+          if (tileDef.surface) {
+            info.surface = tileDef.surface;
+          }
+          if (typeof tileDef.collides === "boolean") {
+            info.collides = tileDef.collides;
+          }
         }
       }
     }
@@ -217,8 +226,15 @@ export async function buildLevelFromData(
         if (!mesh) continue;
         mesh.position.y = 0;
         group.add(mesh);
-        if (tileDef.surface) {
-          surfaceGrid[row][col] = tileDef.surface;
+
+        const info = surfaceGrid[row]?.[col];
+        if (info) {
+          if (tileDef.surface) {
+            info.surface = tileDef.surface;
+          }
+          if (typeof tileDef.collides === "boolean") {
+            info.collides = tileDef.collides;
+          }
         }
       }
     }
@@ -386,7 +402,8 @@ export function scatterShrubs({ scene, mapState, surfaceGrid }, count = 28) {
   const candidates = [];
   for (let row = 0; row < surfaceGrid.length; row++) {
     for (let col = 0; col < surfaceGrid[row].length; col++) {
-      if (surfaceGrid[row][col] === "grass") {
+      const info = surfaceGrid[row][col];
+      if (info.surface === "grass" && !info.collides) {
         candidates.push({ row, col });
       }
     }
@@ -412,13 +429,14 @@ export function scatterShrubs({ scene, mapState, surfaceGrid }, count = 28) {
 }
 
 export function createSurfaceResolver({ mapState, surfaceGrid }) {
+  const fallback = { surface: "grass", collides: false };
   return (position) => {
-    if (!surfaceGrid.length) return "grass";
+    if (!surfaceGrid.length) return fallback;
     const col = Math.floor((position.x - mapState.minX) / mapState.tileWorldSize);
-    const row = Math.floor((mapState.maxZ - position.z) / mapState.tileWorldSize);
-    if (row < 0 || row >= surfaceGrid.length) return "grass";
-    if (col < 0 || col >= surfaceGrid[row].length) return "grass";
-    return surfaceGrid[row][col] || "grass";
+    const row = Math.floor((position.z - mapState.minZ) / mapState.tileWorldSize);
+    if (row < 0 || row >= surfaceGrid.length) return fallback;
+    if (col < 0 || col >= surfaceGrid[row].length) return fallback;
+    return surfaceGrid[row][col] || fallback;
   };
 }
 
