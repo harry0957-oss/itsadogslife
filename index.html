@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+ <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>It's a Dog's Life - Topdown Prototype</title>
@@ -436,30 +436,34 @@
         scene.add(shrub);
       }
 
+      const handlerTexture = new THREE.TextureLoader().load(
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/npc.png"
+      );
+      handlerTexture.magFilter = THREE.NearestFilter;
+      handlerTexture.minFilter = THREE.NearestFilter;
+      handlerTexture.repeat.set(0.25, 0.25);
+
+      const handlerMaterial = new THREE.MeshBasicMaterial({
+        map: handlerTexture,
+        transparent: true,
+        side: THREE.DoubleSide
+      });
+
       const handler = new THREE.Group();
-      const handlerBase = new THREE.Mesh(
-        new THREE.CylinderGeometry(3, 4, 4, 24),
-        new THREE.MeshLambertMaterial({ color: 0xffb703 })
+      const handlerSprite = new THREE.Mesh(
+        new THREE.PlaneGeometry(14, 18),
+        handlerMaterial
       );
-      handlerBase.position.y = 2;
-      handlerBase.castShadow = true;
-      handler.add(handlerBase);
+      handlerSprite.position.y = 9;
+      handler.add(handlerSprite);
 
-      const handlerHead = new THREE.Mesh(
-        new THREE.SphereGeometry(2.5, 24, 24),
-        new THREE.MeshLambertMaterial({ color: 0xf77f00 })
+      const handlerShadow = new THREE.Mesh(
+        new THREE.CircleGeometry(5, 32),
+        new THREE.MeshBasicMaterial({ color: 0x000000, opacity: 0.35, transparent: true })
       );
-      handlerHead.position.y = 5;
-      handlerHead.castShadow = true;
-      handler.add(handlerHead);
-
-      const leash = new THREE.Mesh(
-        new THREE.TorusGeometry(3.6, 0.3, 12, 32),
-        new THREE.MeshLambertMaterial({ color: 0x6a4c93 })
-      );
-      leash.rotation.x = Math.PI / 2;
-      leash.position.y = 4.1;
-      handler.add(leash);
+      handlerShadow.rotation.x = -Math.PI / 2;
+      handlerShadow.position.y = 0.05;
+      handler.add(handlerShadow);
 
       handler.position.set(-40, 0, 40);
       scene.add(handler);
@@ -556,6 +560,49 @@
       const clock = new THREE.Clock();
       const speed = 42;
       const movementVector = new THREE.Vector3();
+      const billboardTarget = new THREE.Vector3();
+
+      const frameWidth = 0.25;
+      const frameHeight = 0.25;
+      const directionRows = { down: 0, right: 1, up: 2, left: 3 };
+      let currentDirection = "down";
+      let currentFrame = 0;
+      let frameTimer = 0;
+      const frameDuration = 0.12;
+
+      function setSpriteFrame(frame, row) {
+        handlerTexture.offset.x = frame * frameWidth;
+        handlerTexture.offset.y = 1 - frameHeight - row * frameHeight;
+        handlerTexture.needsUpdate = true;
+      }
+
+      setSpriteFrame(0, directionRows[currentDirection]);
+
+      function updateDirection(direction) {
+        if (currentDirection !== direction) {
+          currentDirection = direction;
+          currentFrame = 0;
+          frameTimer = 0;
+          setSpriteFrame(currentFrame, directionRows[currentDirection]);
+        }
+      }
+
+      function updateSpriteAnimation(delta, moving) {
+        const row = directionRows[currentDirection];
+        if (moving) {
+          frameTimer += delta;
+          if (frameTimer >= frameDuration) {
+            frameTimer -= frameDuration;
+            currentFrame = (currentFrame + 1) % 4;
+            setSpriteFrame(currentFrame, row);
+          }
+        } else if (currentFrame !== 0) {
+          currentFrame = 0;
+          frameTimer = 0;
+          setSpriteFrame(currentFrame, row);
+        }
+      }
+
       const bounds = {
         minX: -groundSize * 0.48,
         maxX: groundSize * 0.48,
@@ -678,24 +725,35 @@
       }
 
       function updateMovement(delta) {
-        movementVector.set(0, 0, 0);
-        if (pressedKeys.has("ArrowUp") || pressedKeys.has("KeyW")) movementVector.z -= 1;
-        if (pressedKeys.has("ArrowDown") || pressedKeys.has("KeyS")) movementVector.z += 1;
-        if (pressedKeys.has("ArrowLeft") || pressedKeys.has("KeyA")) movementVector.x -= 1;
-        if (pressedKeys.has("ArrowRight") || pressedKeys.has("KeyD")) movementVector.x += 1;
+        let inputX = 0;
+        let inputZ = 0;
+        if (pressedKeys.has("ArrowUp") || pressedKeys.has("KeyW")) inputZ -= 1;
+        if (pressedKeys.has("ArrowDown") || pressedKeys.has("KeyS")) inputZ += 1;
+        if (pressedKeys.has("ArrowLeft") || pressedKeys.has("KeyA")) inputX -= 1;
+        if (pressedKeys.has("ArrowRight") || pressedKeys.has("KeyD")) inputX += 1;
 
-        if (movementVector.lengthSq() > 0) {
-          movementVector.normalize().multiplyScalar(speed * delta);
+        const moving = inputX !== 0 || inputZ !== 0;
+
+        if (moving) {
+          if (Math.abs(inputX) > Math.abs(inputZ)) {
+            updateDirection(inputX > 0 ? "right" : "left");
+          } else {
+            updateDirection(inputZ > 0 ? "down" : "up");
+          }
+
+          const length = Math.hypot(inputX, inputZ);
+          movementVector.set(inputX / length, 0, inputZ / length).multiplyScalar(speed * delta);
           handler.position.add(movementVector);
           handler.position.x = THREE.MathUtils.clamp(handler.position.x, bounds.minX, bounds.maxX);
           handler.position.z = THREE.MathUtils.clamp(handler.position.z, bounds.minZ, bounds.maxZ);
-          handler.rotation.y = Math.atan2(movementVector.x, movementVector.z);
 
           const surface = determineSurface(handler.position);
           playFootsteps(surface);
         } else {
           stopFootsteps();
         }
+
+        updateSpriteAnimation(delta, moving);
       }
 
       function updateInteraction() {
@@ -733,6 +791,9 @@
         cameraTarget.copy(handler.position).add(cameraOffset);
         camera.position.lerp(cameraTarget, 0.12);
         camera.lookAt(handler.position.x, handler.position.y + 6, handler.position.z);
+
+        billboardTarget.set(camera.position.x, handlerSprite.position.y, camera.position.z);
+        handlerSprite.lookAt(billboardTarget);
 
         renderer.render(scene, camera);
       }
