@@ -226,12 +226,16 @@ function createTownMode(tileMetadata) {
   mode.buildTileLayers = ({ state, gridSize, tile, x, y }) => {
     const layers = [];
 
-    const landMatch = (nx, ny) => ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].base === 'land';
+    const baseMatch = (nx, ny) =>
+      ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].base === tile.base;
     const overlayMatch = (nx, ny, overlay) =>
       ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].overlay === overlay;
 
     const baseConfig = tile.base === 'sea' ? sprites.sea ?? sprites.water : sprites.land;
-    const baseKey = tile.base === 'land' ? computeNineSliceKey(x, y, gridSize, landMatch) : 'single';
+    let baseKey = 'single';
+    if (baseConfig?.sprite?.type === 'nine-slice') {
+      baseKey = computeNineSliceKey(x, y, gridSize, baseMatch);
+    }
     const baseLayer = spriteLayer(baseConfig, pickFrame(baseConfig, baseKey));
 
     const overlay = tile.overlay;
