@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+ <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>It's a Dog's Life - Topdown Prototype</title>
@@ -384,6 +384,7 @@
       ];
 
       const signEntries = [];
+      const houseColliders = [];
 
       buildingData.forEach((data, index) => {
         if (data.spawnHouse !== false) {
@@ -391,6 +392,12 @@
           const house = createHouse(palette);
           house.position.copy(data.position);
           scene.add(house);
+
+          houseColliders.push({
+            center: new THREE.Vector2(data.position.x, data.position.z),
+            halfX: 13,
+            halfZ: 12
+          });
         }
 
         const sign = createSign();
@@ -433,12 +440,26 @@
         scene.add(shrub);
       }
 
-      const handlerTexture = new THREE.TextureLoader().load(
-        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/npc.png"
-      );
+      const spriteCanvas = document.createElement("canvas");
+      spriteCanvas.width = 64;
+      spriteCanvas.height = 64;
+      const spriteCtx = spriteCanvas.getContext("2d");
+
+      const handlerTexture = new THREE.CanvasTexture(spriteCanvas);
       handlerTexture.magFilter = THREE.NearestFilter;
       handlerTexture.minFilter = THREE.NearestFilter;
-      handlerTexture.repeat.set(0.25, 0.25);
+      handlerTexture.generateMipmaps = false;
+
+      const spriteSheet = new Image();
+      spriteSheet.crossOrigin = "anonymous";
+      spriteSheet.src =
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/walk.png";
+
+      let spriteLoaded = false;
+      spriteSheet.addEventListener("load", () => {
+        spriteLoaded = true;
+        setSpriteFrame(currentFrame, directionRows[currentDirection]);
+      });
 
       const handlerMaterial = new THREE.MeshBasicMaterial({
         map: handlerTexture,
@@ -452,7 +473,7 @@
         handlerMaterial
       );
       handlerSprite.rotation.x = -Math.PI / 2;
-      handlerSprite.position.y = 0.12;
+      handlerSprite.position.y = 0.4;
       handler.add(handlerSprite);
 
       const handlerShadow = new THREE.Mesh(
@@ -530,17 +551,26 @@
       const speed = 42;
       const movementVector = new THREE.Vector3();
 
-      const frameWidth = 0.25;
-      const frameHeight = 0.25;
-      const directionRows = { down: 0, right: 1, up: 2, left: 3 };
+      const directionRows = { up: 0, right: 1, down: 2, left: 3 };
       let currentDirection = "down";
       let currentFrame = 0;
       let frameTimer = 0;
       const frameDuration = 0.12;
 
       function setSpriteFrame(frame, row) {
-        handlerTexture.offset.x = frame * frameWidth;
-        handlerTexture.offset.y = 1 - frameHeight - row * frameHeight;
+        if (!spriteLoaded) return;
+        spriteCtx.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
+        spriteCtx.drawImage(
+          spriteSheet,
+          frame * 64,
+          row * 64,
+          64,
+          64,
+          0,
+          0,
+          64,
+          64
+        );
         handlerTexture.needsUpdate = true;
       }
 
@@ -561,7 +591,7 @@
           frameTimer += delta;
           if (frameTimer >= frameDuration) {
             frameTimer -= frameDuration;
-            currentFrame = (currentFrame + 1) % 4;
+            currentFrame = (currentFrame + 1) % 9;
             setSpriteFrame(currentFrame, row);
           }
         } else if (currentFrame !== 0) {
@@ -725,9 +755,41 @@
           movementVector
             .set(inputX / length, 0, inputZ / length)
             .multiplyScalar(speed * delta);
-          handler.position.add(movementVector);
-          handler.position.x = THREE.MathUtils.clamp(handler.position.x, bounds.minX, bounds.maxX);
-          handler.position.z = THREE.MathUtils.clamp(handler.position.z, bounds.minZ, bounds.maxZ);
+
+          let nextX = handler.position.x + movementVector.x;
+          let nextZ = handler.position.z + movementVector.z;
+
+          nextX = THREE.MathUtils.clamp(nextX, bounds.minX, bounds.maxX);
+          nextZ = THREE.MathUtils.clamp(nextZ, bounds.minZ, bounds.maxZ);
+
+          for (const collider of houseColliders) {
+            const withinZ = Math.abs(handler.position.z - collider.center.y) < collider.halfZ;
+            if (withinZ && Math.abs(nextX - collider.center.x) < collider.halfX) {
+              if (nextX > handler.position.x) {
+                nextX = collider.center.x - collider.halfX;
+              } else if (nextX < handler.position.x) {
+                nextX = collider.center.x + collider.halfX;
+              } else {
+                nextX = handler.position.x;
+              }
+            }
+          }
+
+          for (const collider of houseColliders) {
+            const withinX = Math.abs(nextX - collider.center.x) < collider.halfX;
+            if (withinX && Math.abs(nextZ - collider.center.y) < collider.halfZ) {
+              if (nextZ > handler.position.z) {
+                nextZ = collider.center.y - collider.halfZ;
+              } else if (nextZ < handler.position.z) {
+                nextZ = collider.center.y + collider.halfZ;
+              } else {
+                nextZ = handler.position.z;
+              }
+            }
+          }
+
+          handler.position.x = THREE.MathUtils.clamp(nextX, bounds.minX, bounds.maxX);
+          handler.position.z = THREE.MathUtils.clamp(nextZ, bounds.minZ, bounds.maxZ);
 
           const surface = determineSurface(handler.position);
           playFootsteps(surface);
