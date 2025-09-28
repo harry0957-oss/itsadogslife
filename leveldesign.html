@@ -377,6 +377,34 @@
 
   <script>
     const TILE_SIZE = 44;
+        const TILE_WORLD_SIZE = 32;
+    const LEGEND_TEMPLATES = {
+      water: { color: '#2a6f97', surface: 'water' },
+      grass: { color: '#3ca66b', surface: 'grass' },
+      path: { color: '#c89f5d', surface: 'path' },
+      sign: { color: '#f6c177', surface: 'grass' },
+      house: { color: '#f1ede0', surface: 'grass' },
+      'dog-training': { color: '#f4a261', surface: 'grass' },
+      'dog-groomers': { color: '#9f7aea', surface: 'grass' },
+      'pet-shop': { color: '#f6ad55', surface: 'grass' },
+      vets: { color: '#fc8181', surface: 'grass' },
+      'dog-show': { color: '#e9d8fd', surface: 'grass' }
+    };
+    const BUILDING_TITLES = {
+      house: 'Neighbourhood Home',
+      'dog-training': 'Training Grounds',
+      'dog-groomers': 'Groomers',
+      'pet-shop': 'Pet Shop',
+      vets: 'Veterinary Clinic'
+    };
+    const DEFAULT_DESCRIPTIONS = {
+      house: 'A cosy place to rest.',
+      'dog-training': 'Lessons for top pups await inside.',
+      'dog-groomers': 'Pamper dogs with the finest trims.',
+      'pet-shop': 'Stock up on treats and toys.',
+      vets: 'Professional care for every pup.'
+    };
+    const BUILDING_OVERLAYS = new Set(['house', 'dog-training', 'dog-groomers', 'pet-shop', 'vets']);
     const BRUSH_OPTIONS = [1, 2, 4, 8];
 
     const palette = [
@@ -653,11 +681,184 @@
       updateStatus(`Grid resized to ${gridSize} × ${gridSize}. Start shaping your land!`);
     }
 
-    function exportJson() {
-      const layout = {
+   function cloneTiles() {
+      return state.map((row) => row.map((tile) => ({
+        base: tile.base,
+        overlay: tile.overlay,
+        signText: tile.signText
+      })));
+    }
+
+    function legendKeyForTile(tile) {
+      if (tile.base === 'sea') return 'water';
+      if (tile.overlay === 'path') return 'path';
+      if (tile.overlay && tile.overlay !== 'none' && tile.overlay !== 'grass') return tile.overlay;
+      return 'grass';
+    }
+
+    function toTitleCase(value) {
+      return value.replace(/-/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    function createLevelDefinition() {
+      const tiles = cloneTiles();
+      const signTiles = [];
+      for (let y = 0; y < gridSize; y++) {
+        for (let x = 0; x < gridSize; x++) {
+          const tile = tiles[y][x];
+          if (tile.overlay === 'sign') {
+            signTiles.push({ x, y, text: tile.signText.trim(), used: false });
+          }
+        }
+      }
+
+      function findNearestSign(x, y) {
+        let candidate = null;
+        let minDistance = Infinity;
+        for (const sign of signTiles) {
+          if (sign.used || !sign.text) continue;
+          const distance = Math.abs(sign.x - x) + Math.abs(sign.y - y);
+          if (distance < minDistance) {
+            minDistance = distance;
+            candidate = sign;
+          }
+        }
+        if (candidate && minDistance <= 3) {
+          candidate.used = true;
+          return candidate;
+        }
+        return null;
+      }
+
+      function computeSignOffset(from, to) {
+        const dx = to.x - from.x;
+        const dz = from.y - to.y;
+        return [dx * TILE_WORLD_SIZE, 0, dz * TILE_WORLD_SIZE];
+      }
+
+      const usedLegendKeys = new Set();
+      const grid = [];
+      const buildings = [];
+      const showTiles = [];
+      let spawn = null;
+
+      for (let y = 0; y < gridSize; y++) {
+        const row = [];
+        for (let x = 0; x < gridSize; x++) {
+          const tile = tiles[y][x];
+          let key = legendKeyForTile(tile);
+          if (!(key in LEGEND_TEMPLATES)) {
+            key = 'grass';
+          }
+          row.push(key);
+          usedLegendKeys.add(key);
+
+          if (tile.overlay === 'dog-show') {
+            showTiles.push({ x, y });
+          }
+
+          if (BUILDING_OVERLAYS.has(tile.overlay)) {
+            const sign = findNearestSign(x, y);
+            const title = BUILDING_TITLES[tile.overlay] || toTitleCase(tile.overlay);
+            const description = sign?.text || DEFAULT_DESCRIPTIONS[tile.overlay] || '';
+            const building = { tile: [x, y], title, description };
+            if (sign) {
+              building.signOffset = computeSignOffset({ x, y }, sign);
+            }
+
+            if (tile.overlay === 'house' && !spawn) {
+              const offsets = [
+                [1, 0],
+                [-1, 0],
+                [0, 1],
+                [0, -1]
+              ];
+              for (const [dx, dy] of offsets) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (nx < 0 || nx >= gridSize || ny < 0 || ny >= gridSize) continue;
+                if (tiles[ny][nx].overlay === 'path') {
+                  spawn = { tile: [nx, ny] };
+                  break;
+                }
+              }
+              if (!spawn) {
+                spawn = { tile: [x, y] };
+              }
+            }
+
+            buildings.push(building);
+          }
+        }
+        grid.push(row);
+      }
+
+      if (!spawn) {
+        outer: for (let y = Math.floor(gridSize / 2); y < gridSize; y++) {
+          for (let x = Math.floor(gridSize / 2); x < gridSize; x++) {
+            if (tiles[y][x].overlay === 'path') {
+              spawn = { tile: [x, y] };
+              break outer;
+            }
+          }
+        }
+      }
+
+      if (!spawn) {
+        spawn = { tile: [Math.floor(gridSize / 2), Math.floor(gridSize / 2)] };
+      }
+
+      const extraSigns = signTiles
+        .filter((sign) => !sign.used && sign.text)
+        .map((sign) => ({
+          tile: [sign.x, sign.y],
+          title: sign.text,
+          description: sign.text
+        }));
+
+      let showring = null;
+      if (showTiles.length) {
+        const avgX = showTiles.reduce((sum, pos) => sum + pos.x, 0) / showTiles.length;
+        const avgY = showTiles.reduce((sum, pos) => sum + pos.y, 0) / showTiles.length;
+        showring = {
+          tile: [Math.round(avgX), Math.round(avgY)],
+          radius: 18,
+          floorRadius: 15,
+          height: 1.6
+        };
+      }
+
+      const legend = {};
+      usedLegendKeys.forEach((key) => {
+        legend[key] = LEGEND_TEMPLATES[key];
+      });
+
+      return {
+        name: 'Custom Layout',
+        width: gridSize,
+        height: gridSize,
+        tileWorldSize: TILE_WORLD_SIZE,
+        legend,
+        layers: [
+          {
+            name: 'ground',
+            grid
+          }
+        ],
+        tilesets: {},
+        objects: {
+          spawn,
+          buildings,
+          extraSigns,
+          showring
+        },
         size: gridSize,
-        tiles: state
+        tiles
       };
+    }
+
+    function exportJson() {
+      const layout = createLevelDefinition();
       const blob = new Blob([JSON.stringify(layout, null, 2)], { type: 'application/json' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -686,7 +887,11 @@
       if (!layout || typeof layout !== 'object') {
         throw new Error('Layout must be an object.');
       }
-      const size = Number(layout.size);
+            const fallbackDimension =
+        typeof layout.width === 'number' && Number.isFinite(layout.width)
+          ? layout.width
+          : layout.height;
+      const size = Number(layout.size ?? fallbackDimension);
       if (!Number.isInteger(size) || size < 6 || size > 50) {
         throw new Error('Layout size out of bounds.');
       }
