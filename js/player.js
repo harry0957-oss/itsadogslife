@@ -7,6 +7,8 @@ const directionRows = {
   right: 3
 };
 
+const defaultSurfaceInfo = { surface: "grass", collides: false };
+
 export class Player {
   constructor({ scene, canvas, remoteAssetBase }) {
     this.scene = scene;
@@ -16,6 +18,7 @@ export class Player {
     this.pressedKeys = new Set();
     this.preferredAxis = "vertical";
     this.movementVector = new THREE.Vector3();
+    this.collisionProbe = new THREE.Vector3();
     this.speed = 28;
 
     this.currentDirection = "down";
@@ -196,7 +199,7 @@ export class Player {
       maxZ: Infinity
     };
     const houseColliders = environment?.houseColliders ?? [];
-    const determineSurface = environment?.determineSurface ?? (() => "grass");
+    const determineSurface = environment?.determineSurface ?? (() => defaultSurfaceInfo);
 
     let inputX = 0;
     let inputZ = 0;
@@ -217,9 +220,13 @@ export class Player {
       this.preferredAxis = "vertical";
     }
 
-    const moving = inputX !== 0 || inputZ !== 0;
+    const hasInput = inputX !== 0 || inputZ !== 0;
+    let moved = false;
 
-    if (moving) {
+    if (hasInput) {
+      const startX = this.handler.position.x;
+      const startZ = this.handler.position.z;
+
       if (Math.abs(inputX) > Math.abs(inputZ)) {
         this.updateDirection(inputX > 0 ? "right" : "left");
       } else {
@@ -264,16 +271,41 @@ export class Player {
         }
       }
 
+      const probe = this.collisionProbe;
+      const currentY = this.handler.position.y;
+
+      if (nextX !== this.handler.position.x) {
+        probe.set(nextX, currentY, this.handler.position.z);
+        const tileInfo = determineSurface(probe) || defaultSurfaceInfo;
+        if (tileInfo.collides) {
+          nextX = this.handler.position.x;
+        }
+      }
+
+      if (nextZ !== this.handler.position.z) {
+        probe.set(nextX, currentY, nextZ);
+        const tileInfo = determineSurface(probe) || defaultSurfaceInfo;
+        if (tileInfo.collides) {
+          nextZ = this.handler.position.z;
+        }
+      }
+
       this.handler.position.x = THREE.MathUtils.clamp(nextX, minX, maxX);
       this.handler.position.z = THREE.MathUtils.clamp(nextZ, minZ, maxZ);
 
-      const surface = determineSurface(this.handler.position);
-      this.playFootsteps(surface);
+      moved = this.handler.position.x !== startX || this.handler.position.z !== startZ;
+
+      if (moved) {
+        const tileInfo = determineSurface(this.handler.position) || defaultSurfaceInfo;
+        this.playFootsteps(tileInfo.surface ?? "grass");
+      } else {
+        this.stopFootsteps();
+      }
     } else {
       this.stopFootsteps();
     }
 
-    this.updateSpriteAnimation(delta, moving);
+    this.updateSpriteAnimation(delta, moved);
   }
 
   updateSpriteAnimation(delta, moving) {
