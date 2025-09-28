@@ -31,28 +31,58 @@
   },
   "tiles": {
     "land": {
-      "label": "Land",
-      "category": "base",
-      "surface": "grass",
-      "color": "#3ca66b",
-      "collides": false,
-      "sprite": {
-        "tileset": "terrain",
-        "type": "nine-slice",
-        "frames": {
-          "single": [0, 0],
-          "topLeft": [0, 2],
-          "top": [1, 2],
-          "topRight": [2, 2],
-          "left": [0, 3],
-          "center": [1, 3],
-          "right": [2, 3],
-          "bottomLeft": [0, 4],
-          "bottom": [1, 4],
-          "bottomRight": [2, 4]
-        }
-      }
-    },
+  "label": "Land",
+  "category": "base",
+  "surface": "grass",
+  "color": "#3ca66b",
+  "collides": false,
+  "sprite": {
+    "tileset": "terrain",
+    "type": "nine-slice",
+    "frames": {
+      "single": [
+        0,
+        0
+      ],
+      "topLeft": [
+        0,
+        2
+      ],
+      "top": [
+        1,
+        2
+      ],
+      "topRight": [
+        2,
+        2
+      ],
+      "left": [
+        0,
+        3
+      ],
+      "center": [
+        1,
+        3
+      ],
+      "right": [
+        2,
+        3
+      ],
+      "bottomLeft": [
+        0,
+        4
+      ],
+      "bottom": [
+        1,
+        4
+      ],
+      "bottomRight": [
+        2,
+        4
+      ]
+    }
+  }
+},
     "sea": {
       "label": "Sea",
       "category": "base",
