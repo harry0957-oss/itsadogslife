@@ -52,6 +52,27 @@
         box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
       }
 
+      #loadError {
+        margin: 0.75rem auto 0;
+        padding: 0.85rem 1.4rem;
+        border-radius: 1rem;
+        background: rgba(180, 32, 44, 0.85);
+        color: #fff8f8;
+        font-size: 0.95rem;
+        letter-spacing: 0.015em;
+        max-width: min(34rem, 90vw);
+        text-align: center;
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        pointer-events: none;
+      }
+
+      #loadError.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
       #prompt {
         align-self: center;
         margin-bottom: 2rem;
@@ -143,6 +164,7 @@
     <canvas id="scene"></canvas>
     <div id="ui">
       <div id="title">It's a Dog's Life &mdash; Showgrounds Prototype</div>
+      <div id="loadError"></div>
       <div id="prompt"></div>
     </div>
     <button id="musicToggle" type="button">Mute Music</button>
@@ -236,6 +258,8 @@
       const surfaceGrid = [];
       const houseColliders = [];
       const signEntries = [];
+
+      const loadError = document.getElementById("loadError");
 
       const mapState = {
         tileWorldSize: 4,
@@ -629,11 +653,39 @@
       }
 
       async function loadLevel(url) {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Failed to load level: ${response.status} ${response.statusText}`);
+        const resolved = new URL(url, import.meta.url);
+        let fetchError = null;
+
+        if (resolved.protocol !== "file:") {
+          try {
+            const response = await fetch(resolved.href, { cache: "no-store" });
+            if (!response.ok) {
+              throw new Error(`Failed to load level: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            fetchError = error;
+          }
         }
-        const data = await response.json();
+
+        if (resolved.protocol === "file:" || fetchError) {
+          try {
+            const module = await import(resolved.href, { assert: { type: "json" } });
+            return module.default;
+          } catch (importError) {
+            if (fetchError) {
+              throw fetchError;
+            }
+            throw importError;
+          }
+        }
+
+        throw new Error(`Failed to resolve level from ${resolved.href}`);
+      }
+
+      async function buildLevel(url) {
+        const data = await loadLevel(url);
 
         const tileWorldSize = data.tileWorldSize ?? data.tileSize ?? 32;
         const width = data.width ?? 0;
@@ -945,7 +997,10 @@
 
       async function initializeLevel() {
         try {
-          const data = await loadLevel("levels/puppertown.json");
+          loadError.textContent = "";
+          loadError.classList.remove("visible");
+
+          const data = await buildLevel("levels/emeraldisle.json");
           setupBuildings(data);
           setupShowring(data);
           scatterShrubs();
@@ -953,6 +1008,12 @@
           animate();
         } catch (error) {
           console.error(error);
+          const advice =
+            window.location.protocol === "file:"
+              ? "Try running a local web server (for example: npx serve) so the browser can load JSON files."
+              : "Please check that the level file exists and that your internet connection is available.";
+          loadError.textContent = `Level failed to load. ${advice}`;
+          loadError.classList.add("visible");
           animate();
         }
       }
