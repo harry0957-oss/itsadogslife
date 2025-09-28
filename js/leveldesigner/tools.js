@@ -109,8 +109,9 @@ function applyBrush({
   signText
 }) {
   const span = mode.brushTools.has(toolId) ? Math.min(brushSize, gridSize) : 1;
-  const startX = Math.max(0, Math.min(x, gridSize - span));
-  const startY = Math.max(0, Math.min(y, gridSize - span));
+  const half = Math.floor(span / 2);
+  const startX = Math.max(0, Math.min(x - half, gridSize - span));
+  const startY = Math.max(0, Math.min(y - half, gridSize - span));
   let needsBase = false;
 
   for (let by = 0; by < span; by++) {
