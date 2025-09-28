@@ -9,7 +9,7 @@
       font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
       background-color: #0b1522;
       color: #f4f7fb;
-      --tile-size: 44px;
+      --tile-size: 32px;
     }
 
     body {
@@ -174,12 +174,13 @@
       border-radius: 1rem;
       overflow: hidden;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-      gap: 2px;
+      gap: 0;
       width: max-content;
       height: max-content;
     }
 
     .tile {
+      position: relative;
       display: grid;
       place-items: center;
       width: var(--tile-size);
@@ -187,16 +188,40 @@
       font-size: calc(var(--tile-size) * 0.45);
       font-weight: 600;
       cursor: crosshair;
-      transition: background 0.1s ease, transform 0.05s ease;
+      transition: filter 0.1s ease, transform 0.05s ease;
       user-select: none;
       padding: 0;
       box-sizing: border-box;
+      background-repeat: no-repeat;
+      background-origin: border-box;
+      background-size: cover;
     }
 
     .tile:hover {
-      filter: brightness(1.1);
+      filter: brightness(1.05);
       transform: scale(1.02);
     }
+    
+.tile::after {
+      content: attr(data-overlay-symbol);
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: calc(var(--tile-size) * 0.5);
+      color: #fff9c4;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+    }
+
+    .tile[data-overlay="sign"]::after {
+      font-size: calc(var(--tile-size) * 0.4);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #ffe8b0;
+    }
+
 
     .tile[data-base="sea"] {
       background: linear-gradient(135deg, #0f3057, #0b1f36);
@@ -278,4 +303,960 @@
     .primary:hover {
       transform: translateY(-1px) scale(1.01);
     }
+.secondary {
+      border: 1px solid rgba(158, 203, 255, 0.4);
+      background: rgba(24, 42, 64, 0.7);
+      padding: 0.75rem 1.2rem;
+      border-radius: 0.85rem;
+      cursor: pointer;
+      color: #f4f7fb;
+    }
 
+    .map-settings {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    label input {
+      margin-left: 0.35rem;
+      width: 4.5rem;
+      padding: 0.3rem;
+      border-radius: 0.4rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(7, 12, 20, 0.8);
+      color: inherit;
+    }
+
+    @media (max-width: 1024px) {
+      body {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        justify-content: center;
+        text-align: center;
+      }
+
+      #mapCanvas {
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Town Level Designer</h1>
+    <div>
+      <span>Left click to paint • Right click to sea</span>
+    </div>
+  </header>
+
+  <section class="controls" aria-label="Designer Controls">
+    <fieldset>
+      <legend>Palette</legend>
+      <div class="tool-list" id="toolList"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Brush Size</legend>
+      <div class="brush-options" id="brushOptions" role="group" aria-label="Brush size options"></div>
+      <p class="hint">Brush applies to Land and Grass tools (square size per side).</p>
+    </fieldset>
+
+    <fieldset class="map-settings">
+      <legend>Map Settings</legend>
+      <label>Grid Size: <input type="number" id="gridSize" min="6" max="50" value="16" /></label>
+      <button class="secondary" id="resizeGrid">Resize Grid</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Sign Writer</legend>
+      <div class="sign-input">
+        <label for="signText">Message</label>
+        <input type="text" id="signText" maxlength="32" placeholder="Welcome adventurers" />
+        <p class="hint">Update existing signs by painting them again.</p>
+      </div>
+    </fieldset>
+
+    <div id="status" aria-live="polite"></div>
+
+    <div class="export-buttons">
+      <button class="secondary" id="loadJson">Load Layout JSON</button>
+      <button class="primary" id="openLevel">Open Level Page</button>
+      <button class="secondary" id="downloadJson">Download Layout JSON</button>
+    </div>
+    <input type="file" id="loadJsonInput" accept="application/json" hidden />
+  </section>
+
+  <section class="map-wrapper">
+    <div id="mapCanvas">
+      <div id="grid" role="grid"></div>
+    </div>
+  </section>
+
+  <template id="tileTemplate">
+    <button class="tile" type="button"></button>
+  </template>
+
+  <script>
+    const TILE_SIZE = 32;
+    const BRUSH_OPTIONS = [1, 2, 4, 8];
+    const BRUSH_TOOLS = new Set(['land', 'grass', 'short-grass', 'long-grass']);
+
+    const palette = [
+      { id: 'land', label: 'Land', icon: '🏝️', description: 'Claim land from the surrounding sea.' },
+      { id: 'sea', label: 'Sea', icon: '🌊', description: 'Return a tile to open water.' },
+      { id: 'grass', label: 'Grass', icon: '🌱', description: 'Add standard grass using the shared tileset.' },
+      { id: 'short-grass', label: 'Short Grass', icon: '🌾', description: 'Trimmed grass variant for tidy areas.' },
+      { id: 'long-grass', label: 'Long Grass', icon: '🌿', description: 'Tall grass using the long grass sheet.' },
+      { id: 'path', label: 'Path', icon: '🪨', description: 'Lay walking paths for players.' },
+      { id: 'house', label: 'House', icon: '🏠', description: 'Place village houses on land.' },
+      { id: 'vets', label: 'Vets', icon: '🐾', description: 'Mark veterinary services for pets.' },
+      { id: 'dog-training', label: 'Dog Training', icon: '🎯', description: 'Plan dedicated dog training areas.' },
+      { id: 'dog-groomers', label: 'Dog Groomers', icon: '✂️', description: 'Set up grooming parlours for pups.' },
+      { id: 'dog-show', label: 'Dog Show', icon: '🏆', description: 'Designate the show arena.' },
+      { id: 'pet-shop', label: 'Pet Shop', icon: '🛍️', description: 'Place pet supply stores.' },
+      { id: 'sign', label: 'Sign', icon: '🪧', description: 'Add signage for directions or lore.' }
+    ];
+
+    const overlayEmoji = {
+      none: '',
+      grass: '',
+      'short-grass': '',
+      'long-grass': '',
+      path: '',
+      house: '🏠',
+      vets: '🐾',
+      'dog-training': '🎯',
+      'dog-groomers': '✂️',
+      'dog-show': '🏆',
+      'pet-shop': '🛍️',
+      sign: '🪧'
+    };
+
+    const landOnlyTools = new Set([
+      'grass',
+      'short-grass',
+      'long-grass',
+      'path',
+      'house',
+      'vets',
+      'dog-training',
+      'dog-groomers',
+      'dog-show',
+      'pet-shop',
+      'sign'
+    ]);
+    const buildingTools = new Set(['house', 'vets', 'dog-training', 'dog-groomers', 'dog-show', 'pet-shop']);
+
+    let currentTool = 'land';
+    let gridSize = 16;
+    let mouseDown = false;
+    let brushDimension = 1;
+    let currentSignText = '';
+
+    const gridElement = document.getElementById('grid');
+    const statusElement = document.getElementById('status');
+
+    const tileTemplate = document.getElementById('tileTemplate');
+    const brushContainer = document.getElementById('brushOptions');
+    const signInput = document.getElementById('signText');
+
+    const baseTypes = new Set(['sea', 'land']);
+    const overlayTypes = new Set([
+      'none',
+      'grass',
+      'path',
+      'short-grass',
+      'long-grass',
+      'house',
+      'vets',
+      'dog-training',
+      'dog-groomers',
+      'dog-show',
+      'pet-shop',
+      'sign'
+    ]);
+
+    const state = [];
+    const tileElements = [];
+
+    const SPRITES = {
+      land: { src: 'assets/dirt.png', columns: 8, rows: 8 },
+      path: { src: 'assets/dirt.png', columns: 8, rows: 8 },
+      grass: { src: 'assets/grass.png', columns: 8, rows: 8 },
+      longGrass: { src: 'assets/long-grass.png', columns: 8, rows: 8 },
+      water: { src: 'assets/water.png', columns: 8, rows: 8 }
+    };
+
+    const BUILDING_SIZE = 5;
+
+    const BUILDING_TINTS = {
+      house: 'rgba(199, 98, 120, 0.72)',
+      vets: 'rgba(70, 140, 180, 0.72)',
+      'dog-training': 'rgba(138, 109, 200, 0.72)',
+      'dog-groomers': 'rgba(200, 90, 150, 0.72)',
+      'dog-show': 'rgba(200, 170, 90, 0.72)',
+      'pet-shop': 'rgba(90, 170, 120, 0.72)'
+    };
+
+    const NINE_SLICE_COORDS = {
+      single: { col: 0, row: 1 },
+      topLeft: { col: 2, row: 0 },
+      top: { col: 2, row: 1 },
+      topRight: { col: 2, row: 2 },
+      left: { col: 3, row: 0 },
+      center: { col: 3, row: 1 },
+      right: { col: 3, row: 2 },
+      bottomLeft: { col: 4, row: 0 },
+      bottom: { col: 4, row: 2 },
+      bottomRight: { col: 4, row: 3 }
+    };
+
+    function isInside(x, y) {
+      return y >= 0 && y < gridSize && x >= 0 && x < gridSize;
+    }
+
+    function computeNineSliceKey(x, y, matchFn) {
+      const up = matchFn(x, y - 1);
+      const down = matchFn(x, y + 1);
+      const left = matchFn(x - 1, y);
+      const right = matchFn(x + 1, y);
+
+      if (!up && !down && !left && !right) return 'single';
+      if (!up && !left) return 'topLeft';
+      if (!up && !right) return 'topRight';
+      if (!down && !left) return 'bottomLeft';
+      if (!down && !right) return 'bottomRight';
+      if (!up) return 'top';
+      if (!down) return 'bottom';
+      if (!left) return 'left';
+      if (!right) return 'right';
+      return 'center';
+    }
+
+    function spriteLayer(key, frame) {
+      const sheet = SPRITES[key];
+      if (!sheet || !frame) return null;
+      const sizeX = sheet.columns * TILE_SIZE;
+      const sizeY = sheet.rows * TILE_SIZE;
+      return {
+        image: `url(${sheet.src})`,
+        size: `${sizeX}px ${sizeY}px`,
+        position: `${-frame.col * TILE_SIZE}px ${-frame.row * TILE_SIZE}px`
+      };
+    }
+
+    function tintLayer(color) {
+      return { image: `linear-gradient(${color}, ${color})`, size: '100% 100%', position: '0 0' };
+    }
+
+    function landMatch(x, y) {
+      return isInside(x, y) && state[y][x].base === 'land';
+    }
+
+    function overlayMatch(x, y, overlay) {
+      return isInside(x, y) && state[y][x].overlay === overlay;
+    }
+
+    function getLandFrame(x, y) {
+      const key = computeNineSliceKey(x, y, landMatch);
+      return NINE_SLICE_COORDS[key] || NINE_SLICE_COORDS.center;
+    }
+
+    function getOverlayFrame(x, y, overlay) {
+      const key = computeNineSliceKey(x, y, (nx, ny) => overlayMatch(nx, ny, overlay));
+      return NINE_SLICE_COORDS[key] || NINE_SLICE_COORDS.center;
+    }
+
+    function getShortGrassFrame(x, y) {
+      const variants = [
+        { col: 7, row: 0 },
+        { col: 7, row: 1 },
+        { col: 7, row: 2 },
+        { col: 7, row: 3 }
+      ];
+      const index = Math.abs((x * 131 + y * 17) % variants.length);
+      return variants[index];
+    }
+
+    function buildTileLayers(x, y, tile) {
+      const overlayLayers = [];
+
+      switch (tile.overlay) {
+        case 'grass':
+          overlayLayers.push(spriteLayer('grass', getOverlayFrame(x, y, 'grass')));
+          break;
+        case 'long-grass':
+          overlayLayers.push(spriteLayer('longGrass', getOverlayFrame(x, y, 'long-grass')));
+          break;
+        case 'short-grass':
+          overlayLayers.push(spriteLayer('grass', getShortGrassFrame(x, y)));
+          break;
+        case 'path':
+          overlayLayers.push(spriteLayer('path', getOverlayFrame(x, y, 'path')));
+          break;
+        case 'sign':
+          overlayLayers.push(tintLayer('rgba(150, 98, 45, 0.75)'));
+          break;
+        default:
+          if (BUILDING_TINTS[tile.overlay]) {
+            overlayLayers.push(tintLayer(BUILDING_TINTS[tile.overlay]));
+          }
+      }
+
+      const baseLayer =
+        tile.base === 'sea'
+          ? spriteLayer('water', { col: 0, row: 0 })
+          : spriteLayer('land', getLandFrame(x, y));
+
+      return overlayLayers.filter(Boolean).concat(baseLayer ? [baseLayer] : []);
+    }
+
+    function applyLayers(tileElement, layers) {
+      if (!layers.length) {
+        tileElement.style.backgroundImage = 'none';
+        tileElement.style.backgroundSize = '';
+        tileElement.style.backgroundPosition = '';
+        tileElement.style.backgroundRepeat = '';
+        return;
+      }
+
+      tileElement.style.backgroundImage = layers.map(layer => layer.image).join(', ');
+      tileElement.style.backgroundSize = layers.map(layer => layer.size).join(', ');
+      tileElement.style.backgroundPosition = layers.map(layer => layer.position).join(', ');
+      tileElement.style.backgroundRepeat = layers.map(() => 'no-repeat').join(', ');
+    }
+
+    function getBuildingArea(x, y) {
+      const half = Math.floor(BUILDING_SIZE / 2);
+      const startX = Math.max(0, Math.min(x - half, gridSize - BUILDING_SIZE));
+      const startY = Math.max(0, Math.min(y - half, gridSize - BUILDING_SIZE));
+      return { startX, startY };
+    }
+
+    function canPlaceBuilding(x, y, overlay) {
+      const { startX, startY } = getBuildingArea(x, y);
+      for (let by = 0; by < BUILDING_SIZE; by++) {
+        for (let bx = 0; bx < BUILDING_SIZE; bx++) {
+          const nx = startX + bx;
+          const ny = startY + by;
+          const tile = state[ny][nx];
+          if (tile.base !== 'land') return false;
+          if (tile.overlay !== 'none' && tile.overlay !== overlay) return false;
+        }
+      }
+      return true;
+    }
+
+    function applyBuilding(x, y, overlay) {
+      const { startX, startY } = getBuildingArea(x, y);
+      for (let by = 0; by < BUILDING_SIZE; by++) {
+        for (let bx = 0; bx < BUILDING_SIZE; bx++) {
+          const nx = startX + bx;
+          const ny = startY + by;
+          const tile = state[ny][nx];
+          tile.base = 'land';
+          tile.overlay = overlay;
+          tile.signText = '';
+          const element = tileElements[ny]?.[nx];
+          if (element) {
+            updateTileAppearance(element, tile);
+          }
+        }
+      }
+      return true;
+    }
+
+    signInput.addEventListener('input', event => {
+      currentSignText = event.target.value.trim();
+    });
+
+    function initPalette() {
+      const toolList = document.getElementById('toolList');
+      palette.forEach(tool => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'tool';
+        button.dataset.tool = tool.id;
+        button.innerHTML = `<span class="tool-icon">${tool.icon}</span> ${tool.label}`;
+        button.title = tool.description;
+        if (tool.id === currentTool) button.classList.add('active');
+        button.addEventListener('click', () => {
+          currentTool = tool.id;
+          toolList.querySelectorAll('.tool').forEach(btn => btn.classList.toggle('active', btn === button));
+          updateStatus(`Selected ${tool.label}. ${tool.description}`);
+        });
+        toolList.appendChild(button);
+      });
+    }
+
+    function initBrushOptions() {
+      BRUSH_OPTIONS.forEach(size => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'brush';
+        button.dataset.size = size;
+        button.textContent = `${size}×${size}`;
+        if (size === brushDimension) button.classList.add('active');
+        button.addEventListener('click', () => {
+          brushDimension = size;
+          brushContainer.querySelectorAll('.brush').forEach(btn => btn.classList.toggle('active', btn === button));
+          updateStatus(`Brush size set to ${size}×${size} tiles for Land and Grass.`);
+        });
+        brushContainer.appendChild(button);
+      });
+    }
+
+    function createState(size) {
+      state.length = 0;
+      for (let y = 0; y < size; y++) {
+        const row = [];
+        for (let x = 0; x < size; x++) {
+          row.push({ base: 'sea', overlay: 'none', signText: '' });
+        }
+        state.push(row);
+      }
+    }
+
+    function renderGrid() {
+      gridElement.innerHTML = '';
+      gridElement.style.setProperty('--tile-size', `${TILE_SIZE}px`);
+      gridElement.style.gridTemplateColumns = `repeat(${gridSize}, ${TILE_SIZE}px)`;
+      gridElement.style.gridTemplateRows = `repeat(${gridSize}, ${TILE_SIZE}px)`;
+      gridElement.style.width = `${gridSize * TILE_SIZE}px`;
+      gridElement.style.height = `${gridSize * TILE_SIZE}px`;
+      tileElements.length = 0;
+
+      for (let y = 0; y < gridSize; y++) {
+        tileElements[y] = [];
+        for (let x = 0; x < gridSize; x++) {
+          const tileState = state[y][x];
+          const tile = tileTemplate.content.firstElementChild.cloneNode(true);
+          tile.dataset.x = x;
+          tile.dataset.y = y;
+          updateTileAppearance(tile, tileState);
+          tile.addEventListener('pointerdown', handlePointerDown);
+          tile.addEventListener('pointerenter', handlePointerEnter);
+          tile.addEventListener('contextmenu', event => event.preventDefault());
+          tileElements[y][x] = tile;
+          gridElement.appendChild(tile);
+        }
+      }
+    }
+
+    function updateTileAppearance(tile, tileState) {
+      tile.dataset.base = tileState.base;
+      tile.dataset.overlay = tileState.overlay;
+      if (tileState.signText) {
+        tile.dataset.signText = tileState.signText;
+      } else {
+        delete tile.dataset.signText;
+      }
+
+      const x = Number(tile.dataset.x);
+      const y = Number(tile.dataset.y);
+      const layers = buildTileLayers(x, y, tileState);
+      applyLayers(tile, layers);
+
+      const symbol =
+        tileState.overlay === 'sign'
+          ? tileState.signText || overlayEmoji.sign
+          : overlayEmoji[tileState.overlay] || '';
+      if (symbol) {
+        tile.dataset.overlaySymbol = symbol;
+      } else {
+        delete tile.dataset.overlaySymbol;
+      }
+
+      const overlayLabel =
+        tileState.overlay === 'none'
+          ? ''
+          : tileState.overlay === 'sign'
+            ? tileState.signText
+              ? ` with sign “${tileState.signText}”`
+              : ' with sign'
+            : ` with ${tileState.overlay.replace(/-/g, ' ')}`;
+      tile.setAttribute('aria-label', `${tileState.base} tile${overlayLabel}`);
+      tile.title = tileState.overlay === 'sign' && tileState.signText ? tileState.signText : '';
+    }
+
+    function applyTool(x, y, tool = currentTool) {
+      const tile = state[y][x];
+      switch (tool) {
+        case 'sea': {
+          const changed = tile.base !== 'sea' || tile.overlay !== 'none' || tile.signText !== '';
+          tile.base = 'sea';
+          tile.overlay = 'none';
+          tile.signText = '';
+          return changed;
+        }
+        case 'land': {
+          const changed = tile.base !== 'land' || tile.overlay !== 'none' || tile.signText !== '';
+          tile.base = 'land';
+          tile.overlay = 'none';
+          tile.signText = '';
+          return changed;
+        }
+        case 'grass':
+        case 'short-grass':
+        case 'long-grass':
+        case 'path': {
+          if (tile.base !== 'land') return false;
+          if (tile.overlay === tool) return false;
+          tile.overlay = tool;
+          tile.signText = '';
+          return true;
+        }
+        case 'sign': {
+          if (tile.base !== 'land') return false;
+          const text = currentSignText;
+          if (tile.overlay === 'sign' && tile.signText === text) return false;
+          tile.overlay = 'sign';
+          tile.signText = text;
+          return true;
+        }
+        default: {
+          if (buildingTools.has(tool)) {
+            if (!canPlaceBuilding(x, y, tool)) {
+              updateStatus(`Need a ${BUILDING_SIZE}×${BUILDING_SIZE} land area cleared for ${tool.replace(/-/g, ' ')}.`);
+              return false;
+            }
+            return applyBuilding(x, y, tool);
+          }
+        }
+      }
+      return false;
+    }
+
+    function applyBrush(x, y, tool) {
+      const span = BRUSH_TOOLS.has(tool) ? Math.min(brushDimension, gridSize) : 1;
+      const startX = Math.max(0, Math.min(x, gridSize - span));
+      const startY = Math.max(0, Math.min(y, gridSize - span));
+      let needsLand = false;
+
+      for (let by = 0; by < span; by++) {
+        for (let bx = 0; bx < span; bx++) {
+          const nx = startX + bx;
+          const ny = startY + by;
+          const tileState = state[ny][nx];
+          if (landOnlyTools.has(tool) && tileState.base !== 'land') {
+            needsLand = true;
+            continue;
+          }
+          if (applyTool(nx, ny, tool)) {
+            const row = tileElements[ny];
+            if (row) {
+              const tile = row[nx];
+              if (tile) {
+                updateTileAppearance(tile, state[ny][nx]);
+              }
+            }
+          }
+        }
+      }
+
+      if (needsLand) {
+        updateStatus('Claim land before placing terrain, buildings, or signs.');
+      }
+    }
+
+    function handlePointerDown(event) {
+      event.preventDefault();
+      const tool = event.button === 2 ? 'sea' : currentTool;
+      const x = Number(event.currentTarget.dataset.x);
+      const y = Number(event.currentTarget.dataset.y);
+      mouseDown = true;
+      applyBrush(x, y, tool);
+      window.addEventListener('pointerup', handlePointerUp, { once: true });
+    }
+
+    function handlePointerEnter(event) {
+      if (!mouseDown) return;
+      const tool = event.buttons === 2 ? 'sea' : currentTool;
+      const x = Number(event.currentTarget.dataset.x);
+      const y = Number(event.currentTarget.dataset.y);
+      applyBrush(x, y, tool);
+    }
+
+    function handlePointerUp() {
+      mouseDown = false;
+    }
+
+    function updateStatus(message) {
+      statusElement.textContent = message;
+    }
+
+    function resizeGrid() {
+      const requested = Number(document.getElementById('gridSize').value);
+      if (!Number.isInteger(requested) || requested < 6 || requested > 50) {
+        updateStatus('Grid size must be between 6 and 50.');
+        return;
+      }
+      gridSize = requested;
+      createState(gridSize);
+      renderGrid();
+      updateStatus(`Grid resized to ${gridSize} × ${gridSize}. Start shaping your land!`);
+    }
+
+    function exportJson() {
+      const layout = {
+        size: gridSize,
+        tiles: state
+      };
+      const blob = new Blob([JSON.stringify(layout, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'town-layout.json';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function loadJsonFromFile(file) {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          applyLayout(parsed);
+          updateStatus(`Loaded layout from ${file.name}.`);
+        } catch (error) {
+          console.error('Failed to load layout', error);
+          const message = error instanceof Error ? error.message : 'Invalid JSON file.';
+          updateStatus(`Unable to load layout: ${message}`);
+        }
+      });
+      reader.readAsText(file);
+    }
+
+    function applyLayout(layout) {
+      if (!layout || typeof layout !== 'object') {
+        throw new Error('Layout must be an object.');
+      }
+      const size = Number(layout.size);
+      if (!Number.isInteger(size) || size < 6 || size > 50) {
+        throw new Error('Layout size out of bounds.');
+      }
+      const tiles = layout.tiles;
+      if (!Array.isArray(tiles) || tiles.length !== size) {
+        throw new Error('Tiles array does not match layout size.');
+      }
+
+      gridSize = size;
+      createState(gridSize);
+
+      for (let y = 0; y < gridSize; y++) {
+        const row = tiles[y];
+        if (!Array.isArray(row) || row.length !== gridSize) {
+          throw new Error('Tile rows must match layout size.');
+        }
+        for (let x = 0; x < gridSize; x++) {
+          state[y][x] = sanitizeTile(row[x]);
+        }
+      }
+
+      document.getElementById('gridSize').value = gridSize;
+      renderGrid();
+      mouseDown = false;
+    }
+
+    function sanitizeTile(tile) {
+      const safeBase = baseTypes.has(tile?.base) ? tile.base : 'sea';
+      let safeOverlay = overlayTypes.has(tile?.overlay) ? tile.overlay : 'none';
+      let safeSign = '';
+
+      if (safeOverlay !== 'none' && safeBase !== 'land') {
+        safeOverlay = 'none';
+      }
+
+      if (safeOverlay === 'sign') {
+        safeSign = typeof tile?.signText === 'string' ? tile.signText.slice(0, 32).trim() : '';
+      }
+
+      return {
+        base: safeOverlay === 'none' ? safeBase : 'land',
+        overlay: safeOverlay,
+        signText: safeSign
+      };
+    }
+
+    function openLevelPage() {
+      const levelHtml = generateLevelHtml();
+      const levelWindow = window.open('', '_blank');
+      if (!levelWindow) {
+        updateStatus('Pop-up blocked. Allow pop-ups to open the level page.');
+        return;
+      }
+      levelWindow.document.write(levelHtml);
+      levelWindow.document.close();
+    }
+
+    function generateLevelHtml() {
+      const snapshot = state.map(row =>
+        row.map(tile => ({ base: tile.base, overlay: tile.overlay, signText: tile.signText }))
+      );
+      const layoutJson = JSON.stringify({ size: gridSize, tiles: snapshot });
+      const overlaySymbols = JSON.stringify(overlayEmoji);
+      const buildingTints = JSON.stringify(BUILDING_TINTS);
+
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Town Level Preview</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, rgba(120, 180, 255, 0.18), rgba(9, 14, 24, 0.95));
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: #eef5ff;
+    }
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 { margin: 0; letter-spacing: 0.08em; text-transform: uppercase; }
+    .map {
+      --tile-size: 32px;
+      display: grid;
+      gap: 0;
+      background: #041422;
+      padding: 0.75rem;
+      border-radius: 1.2rem;
+      box-shadow: 0 1.5rem 3.5rem rgba(0, 0, 0, 0.4);
+    }
+    .cell {
+      width: var(--tile-size);
+      height: var(--tile-size);
+      position: relative;
+      background-repeat: no-repeat;
+      background-origin: border-box;
+      display: grid;
+      place-items: center;
+      font-size: calc(var(--tile-size) * 0.5);
+    }
+    .cell::after {
+      content: attr(data-overlay-symbol);
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: calc(var(--tile-size) * 0.5);
+      color: #fff9c4;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+    }
+    .cell[data-overlay="sign"]::after {
+      font-size: calc(var(--tile-size) * 0.4);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #ffe8b0;
+    }
+    footer { font-size: 0.9rem; color: rgba(238, 245, 255, 0.7); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Town Level Preview</h1>
+    <section id="map" class="map" role="grid" aria-label="Town layout"></section>
+    <footer>Everything beyond the island edge is open sea and currently inaccessible.</footer>
+  </main>
+  <script>
+    const TILE_SIZE = 32;
+    const SPRITES = {
+      land: { src: 'assets/dirt.png', columns: 8, rows: 8 },
+      path: { src: 'assets/dirt.png', columns: 8, rows: 8 },
+      grass: { src: 'assets/grass.png', columns: 8, rows: 8 },
+      longGrass: { src: 'assets/long-grass.png', columns: 8, rows: 8 },
+      water: { src: 'assets/water.png', columns: 8, rows: 8 }
+    };
+    const NINE_SLICE = {
+      single: { col: 0, row: 1 },
+      topLeft: { col: 2, row: 0 },
+      top: { col: 2, row: 1 },
+      topRight: { col: 2, row: 2 },
+      left: { col: 3, row: 0 },
+      center: { col: 3, row: 1 },
+      right: { col: 3, row: 2 },
+      bottomLeft: { col: 4, row: 0 },
+      bottom: { col: 4, row: 2 },
+      bottomRight: { col: 4, row: 3 }
+    };
+    const layout = ${layoutJson};
+    const OVERLAY_SYMBOLS = ${overlaySymbols};
+    const BUILDING_TINTS = ${buildingTints};
+
+    const map = document.getElementById('map');
+    map.style.setProperty('--tile-size', TILE_SIZE + 'px');
+    map.style.gridTemplateColumns = \`repeat(\${layout.size}, \${TILE_SIZE}px)\`;
+    map.style.gridTemplateRows = \`repeat(\${layout.size}, \${TILE_SIZE}px)\`;
+
+    function computeKey(x, y, matchFn) {
+      const up = matchFn(x, y - 1);
+      const down = matchFn(x, y + 1);
+      const left = matchFn(x - 1, y);
+      const right = matchFn(x + 1, y);
+      if (!up && !down && !left && !right) return 'single';
+      if (!up && !left) return 'topLeft';
+      if (!up && !right) return 'topRight';
+      if (!down && !left) return 'bottomLeft';
+      if (!down && !right) return 'bottomRight';
+      if (!up) return 'top';
+      if (!down) return 'bottom';
+      if (!left) return 'left';
+      if (!right) return 'right';
+      return 'center';
+    }
+
+    function spriteLayer(sheet, frame) {
+      if (!sheet || !frame) return null;
+      return {
+        image: \`url(\${sheet.src})\`,
+        size: \`\${sheet.columns * TILE_SIZE}px \${sheet.rows * TILE_SIZE}px\`,
+        position: \`\${-frame.col * TILE_SIZE}px \${-frame.row * TILE_SIZE}px\`
+      };
+    }
+
+    function tintLayer(color) {
+      return { image: \`linear-gradient(\${color}, \${color})\`, size: '100% 100%', position: '0 0' };
+    }
+
+    function inBounds(x, y) {
+      return y >= 0 && y < layout.size && x >= 0 && x < layout.size;
+    }
+
+    function landMatch(x, y) {
+      return inBounds(x, y) && layout.tiles[y][x].base === 'land';
+    }
+
+    function overlayMatch(x, y, overlay) {
+      return inBounds(x, y) && layout.tiles[y][x].overlay === overlay;
+    }
+
+    function landFrame(x, y) {
+      return NINE_SLICE[computeKey(x, y, landMatch)] || NINE_SLICE.center;
+    }
+
+    function overlayFrame(x, y, overlay) {
+      return NINE_SLICE[computeKey(x, y, (nx, ny) => overlayMatch(nx, ny, overlay))] || NINE_SLICE.center;
+    }
+
+    function shortGrassFrame(x, y) {
+      const variants = [
+        { col: 7, row: 0 },
+        { col: 7, row: 1 },
+        { col: 7, row: 2 },
+        { col: 7, row: 3 }
+      ];
+      const index = Math.abs((x * 131 + y * 17) % variants.length);
+      return variants[index];
+    }
+
+    function buildLayers(x, y, tile) {
+      const overlayLayers = [];
+      switch (tile.overlay) {
+        case 'grass':
+          overlayLayers.push(spriteLayer(SPRITES.grass, overlayFrame(x, y, 'grass')));
+          break;
+        case 'long-grass':
+          overlayLayers.push(spriteLayer(SPRITES.longGrass, overlayFrame(x, y, 'long-grass')));
+          break;
+        case 'short-grass':
+          overlayLayers.push(spriteLayer(SPRITES.grass, shortGrassFrame(x, y)));
+          break;
+        case 'path':
+          overlayLayers.push(spriteLayer(SPRITES.path, overlayFrame(x, y, 'path')));
+          break;
+        case 'sign':
+          overlayLayers.push(tintLayer('rgba(150, 98, 45, 0.75)'));
+          break;
+        default:
+          if (BUILDING_TINTS[tile.overlay]) {
+            overlayLayers.push(tintLayer(BUILDING_TINTS[tile.overlay]));
+          }
+      }
+      const baseLayer = tile.base === 'sea'
+        ? spriteLayer(SPRITES.water, { col: 0, row: 0 })
+        : spriteLayer(SPRITES.land, landFrame(x, y));
+      return overlayLayers.filter(Boolean).concat(baseLayer ? [baseLayer] : []);
+    }
+
+    function applyLayers(element, layers) {
+      if (!layers.length) {
+        element.style.backgroundImage = 'none';
+        element.style.backgroundSize = '';
+        element.style.backgroundPosition = '';
+        element.style.backgroundRepeat = '';
+        return;
+      }
+      element.style.backgroundImage = layers.map(l => l.image).join(', ');
+      element.style.backgroundSize = layers.map(l => l.size).join(', ');
+      element.style.backgroundPosition = layers.map(l => l.position).join(', ');
+      element.style.backgroundRepeat = layers.map(() => 'no-repeat').join(', ');
+    }
+
+    for (let y = 0; y < layout.size; y++) {
+      for (let x = 0; x < layout.size; x++) {
+        const tile = layout.tiles[y][x];
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.x = x;
+        cell.dataset.y = y;
+        cell.dataset.base = tile.base;
+        cell.dataset.overlay = tile.overlay;
+        if (tile.overlay === 'sign' && tile.signText) {
+          cell.dataset.overlaySymbol = tile.signText;
+          cell.title = tile.signText;
+        } else if (OVERLAY_SYMBOLS[tile.overlay]) {
+          cell.dataset.overlaySymbol = OVERLAY_SYMBOLS[tile.overlay];
+        }
+        if (tile.overlay === 'sign' && tile.signText) {
+          cell.dataset.signText = tile.signText;
+        }
+        const layers = buildLayers(x, y, tile);
+        applyLayers(cell, layers);
+        map.appendChild(cell);
+      }
+    }
+  <\/script>
+</body>
+</html>`;
+    }
+
+    document.getElementById('resizeGrid').addEventListener('click', resizeGrid);
+    document.getElementById('downloadJson').addEventListener('click', exportJson);
+    document.getElementById('loadJson').addEventListener('click', () => {
+      document.getElementById('loadJsonInput').click();
+    });
+    document.getElementById('loadJsonInput').addEventListener('change', event => {
+      const [file] = event.target.files || [];
+      if (!file) return;
+      const isJsonType = file.type === 'application/json';
+      const isJsonName = file.name?.toLowerCase().endsWith('.json');
+      if (file.type && !isJsonType && !isJsonName) {
+        updateStatus('Please choose a JSON layout file.');
+        event.target.value = '';
+        return;
+      }
+      loadJsonFromFile(file);
+      event.target.value = '';
+    });
+    document.getElementById('openLevel').addEventListener('click', openLevelPage);
+    gridElement.addEventListener('pointerleave', () => (mouseDown = false));
+
+    initPalette();
+    initBrushOptions();
+    currentSignText = signInput.value.trim();
+    createState(gridSize);
+    renderGrid();
+    updateStatus('Select Land to shape your island, use Grass with larger brushes to fill areas, then add paths, specialist buildings, and custom signs. Right-click turns tiles back into sea.');
+  </script>
+</body>
+</html>
