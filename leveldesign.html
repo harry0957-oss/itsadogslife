@@ -10,6 +10,7 @@
       font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
       background-color: #0b1522;
       color: #f4f7fb;
+      --tile-size: 44px;
     }
 
     body {
@@ -71,6 +72,55 @@
       gap: 0.5rem;
     }
 
+    .brush-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 0.5rem;
+    }
+
+    button.brush {
+      padding: 0.5rem 0.6rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(158, 203, 255, 0.35);
+      background: rgba(24, 42, 64, 0.55);
+      color: inherit;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: transform 0.12s ease, background 0.12s ease, border 0.12s ease;
+    }
+
+    button.brush.active {
+      background: rgba(90, 142, 255, 0.25);
+      border-color: rgba(90, 142, 255, 0.9);
+      box-shadow: 0 0 0 1px rgba(90, 142, 255, 0.4);
+    }
+
+    button.brush:hover {
+      transform: translateY(-1px);
+      background: rgba(40, 60, 90, 0.65);
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: rgba(207, 227, 255, 0.7);
+    }
+
+    .sign-input {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .sign-input input {
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(7, 12, 20, 0.85);
+      color: inherit;
+    }
+
     button.tool {
       display: flex;
       align-items: center;
@@ -108,35 +158,40 @@
     }
 
     #mapCanvas {
-      width: min(80vw, 800px);
-      height: min(80vw, 800px);
-      aspect-ratio: 1 / 1;
+      max-width: 100%;
+      max-height: 80vh;
       background: #0a1322;
       border-radius: 1.2rem;
       padding: 1rem;
       display: grid;
       place-items: center;
       box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.4);
+      overflow: auto;
     }
 
     #grid {
       display: grid;
-      width: 100%;
-      height: 100%;
       background: #053042;
       border-radius: 1rem;
       overflow: hidden;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      gap: 2px;
+      width: max-content;
+      height: max-content;
     }
 
     .tile {
       display: grid;
       place-items: center;
-      font-size: 1.4rem;
+      width: var(--tile-size);
+      height: var(--tile-size);
+      font-size: calc(var(--tile-size) * 0.45);
       font-weight: 600;
       cursor: crosshair;
       transition: background 0.1s ease, transform 0.05s ease;
       user-select: none;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     .tile:hover {
@@ -167,8 +222,33 @@
       background: linear-gradient(135deg, #5c1f2f, #35101b);
     }
 
+    .tile[data-overlay="vets"] {
+      background: linear-gradient(135deg, #234c5c, #15313d);
+    }
+
+    .tile[data-overlay="dog-training"] {
+      background: linear-gradient(135deg, #50396b, #2f2042);
+    }
+
+    .tile[data-overlay="dog-groomers"] {
+      background: linear-gradient(135deg, #7f3b63, #4a1f38);
+    }
+
+    .tile[data-overlay="dog-show"] {
+      background: linear-gradient(135deg, #73571d, #43340f);
+    }
+
+    .tile[data-overlay="pet-shop"] {
+      background: linear-gradient(135deg, #2c5935, #1a3620);
+    }
+
     .tile[data-overlay="sign"] {
       background: linear-gradient(135deg, #8a5a24, #503014);
+      font-size: calc(var(--tile-size) * 0.32);
+      padding: 0 0.2rem;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     #status {
@@ -235,8 +315,6 @@
       }
 
       #mapCanvas {
-        width: min(90vw, 640px);
-        height: min(90vw, 640px);
         margin: 0 auto;
       }
     }
@@ -256,10 +334,25 @@
       <div class="tool-list" id="toolList"></div>
     </fieldset>
 
+    <fieldset>
+      <legend>Brush Size</legend>
+      <div class="brush-options" id="brushOptions" role="group" aria-label="Brush size options"></div>
+      <p class="hint">Brush applies to Land and Grass tools (square size per side).</p>
+    </fieldset>
+
     <fieldset class="map-settings">
       <legend>Map Settings</legend>
       <label>Grid Size: <input type="number" id="gridSize" min="6" max="50" value="16" /></label>
       <button class="secondary" id="resizeGrid">Resize Grid</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Sign Writer</legend>
+      <div class="sign-input">
+        <label for="signText">Message</label>
+        <input type="text" id="signText" maxlength="32" placeholder="Welcome adventurers" />
+        <p class="hint">Update existing signs by painting them again.</p>
+      </div>
     </fieldset>
 
     <div id="status" aria-live="polite"></div>
@@ -281,13 +374,21 @@
   </template>
 
   <script>
+    const TILE_SIZE = 44;
+    const BRUSH_OPTIONS = [1, 2, 4, 8];
+
     const palette = [
       { id: 'land', label: 'Land', icon: '🏝️', description: 'Claim land from the surrounding sea.' },
       { id: 'sea', label: 'Sea', icon: '🌊', description: 'Return a tile to open water.' },
       { id: 'grass', label: 'Grass', icon: '🌿', description: 'Add grassy terrain on land tiles.' },
       { id: 'path', label: 'Path', icon: '🪨', description: 'Lay walking paths for players.' },
       { id: 'house', label: 'House', icon: '🏠', description: 'Place village houses on land.' },
-      { id: 'sign', label: 'Sign', icon: '📜', description: 'Add signage for directions or lore.' }
+      { id: 'vets', label: 'Vets', icon: '🐾', description: 'Mark veterinary services for pets.' },
+      { id: 'dog-training', label: 'Dog Training', icon: '🎯', description: 'Plan dedicated dog training areas.' },
+      { id: 'dog-groomers', label: 'Dog Groomers', icon: '✂️', description: 'Set up grooming parlours for pups.' },
+      { id: 'dog-show', label: 'Dog Show', icon: '🏆', description: 'Designate the show arena.' },
+      { id: 'pet-shop', label: 'Pet Shop', icon: '🛍️', description: 'Place pet supply stores.' },
+      { id: 'sign', label: 'Sign', icon: '🪧', description: 'Add signage for directions or lore.' }
     ];
 
     const overlayEmoji = {
@@ -295,19 +396,36 @@
       grass: '🌿',
       path: '🪨',
       house: '🏠',
-      sign: '📜'
+      vets: '🐾',
+      'dog-training': '🎯',
+      'dog-groomers': '✂️',
+      'dog-show': '🏆',
+      'pet-shop': '🛍️',
+      sign: '🪧'
     };
+
+    const landOnlyTools = new Set(['grass', 'path', 'house', 'vets', 'dog-training', 'dog-groomers', 'dog-show', 'pet-shop', 'sign']);
+    const buildingTools = new Set(['house', 'vets', 'dog-training', 'dog-groomers', 'dog-show', 'pet-shop']);
 
     let currentTool = 'land';
     let gridSize = 16;
     let mouseDown = false;
+    let brushDimension = 1;
+    let currentSignText = '';
 
     const gridElement = document.getElementById('grid');
     const statusElement = document.getElementById('status');
 
     const tileTemplate = document.getElementById('tileTemplate');
+    const brushContainer = document.getElementById('brushOptions');
+    const signInput = document.getElementById('signText');
 
     const state = [];
+    const tileElements = [];
+
+    signInput.addEventListener('input', event => {
+      currentSignText = event.target.value.trim();
+    });
 
     function initPalette() {
       const toolList = document.getElementById('toolList');
@@ -321,10 +439,27 @@
         if (tool.id === currentTool) button.classList.add('active');
         button.addEventListener('click', () => {
           currentTool = tool.id;
-          document.querySelectorAll('.tool').forEach(btn => btn.classList.toggle('active', btn.dataset.tool === currentTool));
+          toolList.querySelectorAll('.tool').forEach(btn => btn.classList.toggle('active', btn === button));
           updateStatus(`Selected ${tool.label}. ${tool.description}`);
         });
         toolList.appendChild(button);
+      });
+    }
+
+    function initBrushOptions() {
+      BRUSH_OPTIONS.forEach(size => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'brush';
+        button.dataset.size = size;
+        button.textContent = `${size}×${size}`;
+        if (size === brushDimension) button.classList.add('active');
+        button.addEventListener('click', () => {
+          brushDimension = size;
+          brushContainer.querySelectorAll('.brush').forEach(btn => btn.classList.toggle('active', btn === button));
+          updateStatus(`Brush size set to ${size}×${size} tiles for Land and Grass.`);
+        });
+        brushContainer.appendChild(button);
       });
     }
 
@@ -333,7 +468,7 @@
       for (let y = 0; y < size; y++) {
         const row = [];
         for (let x = 0; x < size; x++) {
-          row.push({ base: 'sea', overlay: 'none' });
+          row.push({ base: 'sea', overlay: 'none', signText: '' });
         }
         state.push(row);
       }
@@ -341,10 +476,15 @@
 
     function renderGrid() {
       gridElement.innerHTML = '';
-      gridElement.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
-      gridElement.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+      gridElement.style.setProperty('--tile-size', `${TILE_SIZE}px`);
+      gridElement.style.gridTemplateColumns = `repeat(${gridSize}, ${TILE_SIZE}px)`;
+      gridElement.style.gridTemplateRows = `repeat(${gridSize}, ${TILE_SIZE}px)`;
+      gridElement.style.width = `${gridSize * TILE_SIZE}px`;
+      gridElement.style.height = `${gridSize * TILE_SIZE}px`;
+      tileElements.length = 0;
 
       for (let y = 0; y < gridSize; y++) {
+        tileElements[y] = [];
         for (let x = 0; x < gridSize; x++) {
           const tileState = state[y][x];
           const tile = tileTemplate.content.firstElementChild.cloneNode(true);
@@ -354,6 +494,7 @@
           tile.addEventListener('pointerdown', handlePointerDown);
           tile.addEventListener('pointerenter', handlePointerEnter);
           tile.addEventListener('contextmenu', event => event.preventDefault());
+          tileElements[y][x] = tile;
           gridElement.appendChild(tile);
         }
       }
@@ -362,33 +503,100 @@
     function updateTileAppearance(tile, tileState) {
       tile.dataset.base = tileState.base;
       tile.dataset.overlay = tileState.overlay;
-      tile.textContent = overlayEmoji[tileState.overlay] || '';
-      tile.setAttribute('aria-label', `${tileState.base} tile${tileState.overlay !== 'none' ? ' with ' + tileState.overlay : ''}`);
+      if (tileState.signText) {
+        tile.dataset.signText = tileState.signText;
+      } else {
+        delete tile.dataset.signText;
+      }
+      tile.title = tileState.overlay === 'sign' && tileState.signText ? tileState.signText : '';
+      if (tileState.overlay === 'sign') {
+        tile.textContent = tileState.signText || overlayEmoji.sign;
+      } else {
+        tile.textContent = overlayEmoji[tileState.overlay] || '';
+      }
+      const overlayLabel =
+        tileState.overlay === 'none'
+          ? ''
+          : tileState.overlay === 'sign'
+            ? (tileState.signText ? ` with sign “${tileState.signText}”` : ' with sign')
+            : ` with ${tileState.overlay.replace(/-/g, ' ')}`;
+      tile.setAttribute('aria-label', `${tileState.base} tile${overlayLabel}`);
     }
 
     function applyTool(x, y, tool = currentTool) {
       const tile = state[y][x];
       switch (tool) {
-        case 'sea':
+        case 'sea': {
+          const changed = tile.base !== 'sea' || tile.overlay !== 'none' || tile.signText !== '';
           tile.base = 'sea';
           tile.overlay = 'none';
-          break;
-        case 'land':
+          tile.signText = '';
+          return changed;
+        }
+        case 'land': {
+          const changed = tile.base !== 'land';
           tile.base = 'land';
-          tile.overlay = tile.overlay === 'none' ? 'none' : tile.overlay;
-          break;
+          return changed;
+        }
         case 'grass':
-        case 'path':
-        case 'house':
-        case 'sign':
-          if (tile.base !== 'land') {
-            updateStatus('You need to claim land before placing terrain or buildings.');
-            return false;
-          }
+        case 'path': {
+          if (tile.base !== 'land') return false;
+          if (tile.overlay === tool) return false;
           tile.overlay = tool;
-          break;
+          tile.signText = '';
+          return true;
+        }
+        case 'sign': {
+          if (tile.base !== 'land') return false;
+          const text = currentSignText;
+          if (tile.overlay === 'sign' && tile.signText === text) return false;
+          tile.overlay = 'sign';
+          tile.signText = text;
+          return true;
+        }
+        default: {
+          if (buildingTools.has(tool)) {
+            if (tile.base !== 'land') return false;
+            if (tile.overlay === tool) return false;
+            tile.overlay = tool;
+            tile.signText = '';
+            return true;
+          }
+        }
       }
-      return true;
+      return false;
+    }
+
+    function applyBrush(x, y, tool) {
+      const span = tool === 'land' || tool === 'grass' ? Math.min(brushDimension, gridSize) : 1;
+      const startX = Math.max(0, Math.min(x, gridSize - span));
+      const startY = Math.max(0, Math.min(y, gridSize - span));
+      let needsLand = false;
+
+      for (let by = 0; by < span; by++) {
+        for (let bx = 0; bx < span; bx++) {
+          const nx = startX + bx;
+          const ny = startY + by;
+          const tileState = state[ny][nx];
+          if (landOnlyTools.has(tool) && tileState.base !== 'land') {
+            needsLand = true;
+            continue;
+          }
+          if (applyTool(nx, ny, tool)) {
+            const row = tileElements[ny];
+            if (row) {
+              const tile = row[nx];
+              if (tile) {
+                updateTileAppearance(tile, state[ny][nx]);
+              }
+            }
+          }
+        }
+      }
+
+      if (needsLand) {
+        updateStatus('Claim land before placing terrain, buildings, or signs.');
+      }
     }
 
     function handlePointerDown(event) {
@@ -397,9 +605,7 @@
       const x = Number(event.currentTarget.dataset.x);
       const y = Number(event.currentTarget.dataset.y);
       mouseDown = true;
-      if (applyTool(x, y, tool)) {
-        updateTileAppearance(event.currentTarget, state[y][x]);
-      }
+      applyBrush(x, y, tool);
       window.addEventListener('pointerup', handlePointerUp, { once: true });
     }
 
@@ -408,9 +614,7 @@
       const tool = event.buttons === 2 ? 'sea' : currentTool;
       const x = Number(event.currentTarget.dataset.x);
       const y = Number(event.currentTarget.dataset.y);
-      if (applyTool(x, y, tool)) {
-        updateTileAppearance(event.currentTarget, state[y][x]);
-      }
+      applyBrush(x, y, tool);
     }
 
     function handlePointerUp() {
@@ -458,15 +662,26 @@
     }
 
     function generateLevelHtml() {
-      const tileSize = Math.floor(600 / gridSize);
+      const tileSize = Math.max(Math.min(TILE_SIZE, Math.floor(600 / Math.max(gridSize, 1))), 24);
+      const signFont = Math.max(Math.floor(tileSize * 0.35), 10);
       const mapRows = state
         .map((row, y) => {
           const cells = row
             .map((tile, x) => {
               const classes = [`base-${tile.base}`];
               if (tile.overlay !== 'none') classes.push(`overlay-${tile.overlay}`);
-              const label = `${tile.base}${tile.overlay !== 'none' ? ' with ' + tile.overlay : ''}`;
-              return `<div class="cell ${classes.join(' ')}" data-x="${x}" data-y="${y}" aria-label="${label}">${overlayEmoji[tile.overlay] || ''}</div>`;
+              const overlayLabel =
+                tile.overlay === 'none'
+                  ? ''
+                  : tile.overlay === 'sign'
+                    ? (tile.signText ? ` with sign "${tile.signText}"` : ' with sign')
+                    : ` with ${tile.overlay.replace(/-/g, ' ')}`;
+              const ariaLabel = `${tile.base} tile${overlayLabel}`;
+              const content =
+                tile.overlay === 'sign'
+                  ? `<span class="sign-text" style="font-size:${signFont}px">${tile.signText ? escapeHtml(tile.signText) : '🪧'}</span>`
+                  : `${overlayEmoji[tile.overlay] || ''}`;
+              return `<div class="cell ${classes.join(' ')}" data-x="${x}" data-y="${y}" aria-label="${escapeHtml(ariaLabel)}">${content}</div>`;
             })
             .join('');
           return `<div class="row">${cells}</div>`;
@@ -504,7 +719,7 @@
     .cell {
       display: grid;
       place-items: center;
-      font-size: ${Math.max(tileSize * 0.6, 12)}px;
+      font-size: ${Math.max(Math.floor(tileSize * 0.55), 12)}px;
       border-radius: 0.35rem;
     }
     .base-sea { background: linear-gradient(135deg, #0d3357, #051729); color: #8fbefc; }
@@ -512,7 +727,21 @@
     .base-land.overlay-path { background: linear-gradient(135deg, #5d4a39, #31261c); }
     .base-land.overlay-grass { background: linear-gradient(135deg, #4d8f3a, #2f6124); }
     .base-land.overlay-house { background: linear-gradient(135deg, #5c1f2f, #35101b); }
-    .base-land.overlay-sign { background: linear-gradient(135deg, #8a5a24, #503014); }
+    .base-land.overlay-vets { background: linear-gradient(135deg, #234c5c, #15313d); }
+    .base-land.overlay-dog-training { background: linear-gradient(135deg, #50396b, #2f2042); }
+    .base-land.overlay-dog-groomers { background: linear-gradient(135deg, #7f3b63, #4a1f38); }
+    .base-land.overlay-dog-show { background: linear-gradient(135deg, #73571d, #43340f); }
+    .base-land.overlay-pet-shop { background: linear-gradient(135deg, #2c5935, #1a3620); }
+    .base-land.overlay-sign { background: linear-gradient(135deg, #8a5a24, #503014); color: #ffe9c4; }
+    .overlay-sign .sign-text {
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 0.2rem;
+    }
     footer { margin-top: 1.5rem; font-size: 0.9rem; color: rgba(238, 245, 255, 0.7); }
   </style>
 </head>
@@ -528,15 +757,26 @@
 </html>`;
     }
 
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     document.getElementById('resizeGrid').addEventListener('click', resizeGrid);
     document.getElementById('downloadJson').addEventListener('click', exportJson);
     document.getElementById('openLevel').addEventListener('click', openLevelPage);
     gridElement.addEventListener('pointerleave', () => (mouseDown = false));
 
     initPalette();
+    initBrushOptions();
+    currentSignText = signInput.value.trim();
     createState(gridSize);
     renderGrid();
-    updateStatus('Select Land to shape your island, then place grass, paths, houses, and signs. Right-click turns tiles back into sea.');
+    updateStatus('Select Land to shape your island, use Grass with larger brushes to fill areas, then add paths, specialist buildings, and custom signs. Right-click turns tiles back into sea.');
   </script>
 </body>
 </html>
