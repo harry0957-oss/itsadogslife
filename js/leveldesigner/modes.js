@@ -164,7 +164,7 @@ function createTownMode(tileMetadata) {
       'pet-shop',
       'sign'
     ]),
-    brushTools: new Set(['land', 'grass', 'short-grass', 'long-grass']),
+    brushTools: new Set(['land', 'sea', 'grass', 'short-grass', 'long-grass']),
     landOnlyTools: new Set([
       'grass',
       'short-grass',
@@ -335,7 +335,7 @@ function createInteriorMode() {
     overlayEmoji,
     baseTypes: new Set(['sea', 'land']),
     overlayTypes: new Set(['none', 'carpet', 'tile-inlay', 'counter', 'kennel', 'sign']),
-    brushTools: new Set(['land', 'carpet', 'tile-inlay']),
+    brushTools: new Set(['land', 'sea', 'carpet', 'tile-inlay']),
     landOnlyTools: new Set(['carpet', 'tile-inlay', 'counter', 'kennel', 'sign']),
     buildingTools: new Set(),
     buildingSize: 3,
