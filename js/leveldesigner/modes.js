@@ -4,23 +4,22 @@ const DEFAULT_GRID_SIZE = 16;
 const GRID_LIMITS = { min: 6, max: 50 };
 
 const NINE_SLICE_COORDS = {
-  single: { col: 0, row: 1 },
-  topLeft: { col: 2, row: 0 },
-  top: { col: 2, row: 1 },
+  single: { col: 0, row: 0 },
+  topLeft: { col: 0, row: 2 },
+  top: { col: 1, row: 2 },
   topRight: { col: 2, row: 2 },
-  left: { col: 3, row: 0 },
-  center: { col: 3, row: 1 },
-  right: { col: 3, row: 2 },
-  bottomLeft: { col: 4, row: 0 },
-  bottom: { col: 4, row: 2 },
-  bottomRight: { col: 4, row: 3 }
+  left: { col: 0, row: 3 },
+  center: { col: 1, row: 3 },
+  right: { col: 2, row: 3 },
+  bottomLeft: { col: 0, row: 4 },
+  bottom: { col: 1, row: 4 },
+  bottomRight: { col: 2, row: 4 }
 };
 
 const SHORT_GRASS_VARIANTS = [
-  { col: 7, row: 0 },
-  { col: 7, row: 1 },
-  { col: 7, row: 2 },
-  { col: 7, row: 3 }
+  { col: 0, row: 5 },
+  { col: 1, row: 5 },
+  { col: 2, row: 5 }
 ];
 
 function computeNineSliceKey(x, y, gridSize, matchFn) {
@@ -87,11 +86,11 @@ function createTownMode() {
   };
 
   const spriteSheets = {
-    land: { src: 'assets/dirt.png', columns: 8, rows: 8 },
-    path: { src: 'assets/dirt.png', columns: 8, rows: 8 },
-    grass: { src: 'assets/grass.png', columns: 8, rows: 8 },
-    longGrass: { src: 'assets/long-grass.png', columns: 8, rows: 8 },
-    water: { src: 'assets/water.png', columns: 8, rows: 8 }
+    land: { src: 'assets/dirt.png', columns: 3, rows: 6 },
+    path: { src: 'assets/dirt.png', columns: 3, rows: 6 },
+    grass: { src: 'assets/grass.png', columns: 3, rows: 6 },
+    longGrass: { src: 'assets/long-grass.png', columns: 1, rows: 1 },
+    water: { src: 'assets/water.png', columns: 3, rows: 6 }
   };
 
   const mode = {
