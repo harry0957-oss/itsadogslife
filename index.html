@@ -176,6 +176,9 @@
     <script type="module">
       import * as THREE from "three";
 
+        const REMOTE_ASSET_BASE =
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/";
+
       const canvas = document.getElementById("scene");
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -230,7 +233,7 @@
 
       const spriteSheet = new Image();
       spriteSheet.crossOrigin = "anonymous";
-      spriteSheet.src = "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/walk.png";
+      spriteSheet.src = `${REMOTE_ASSET_BASE}assets/walk.png`;
 
       let spriteLoaded = false;
       spriteSheet.addEventListener("load", () => {
@@ -406,9 +409,9 @@
 
       const directionRows = {
         up: 0,
-        right: 3,
+        left: 1,
         down: 2,
-        left: 1
+        right: 3
       };
       let currentDirection = "down";
       let currentFrame = 0;
@@ -567,15 +570,10 @@
           hidePrompt();
         }
       }
-      const backgroundMusic = new Audio(
-        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/music/mapmusic.mp3"
-      );
-      const grassFootsteps = new Audio(
-        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/sounds/grasswalk.mp3"
-      );
-      const pathFootsteps = new Audio(
-        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/sounds/pathwalk.mp3"
-      );
+            
+        const backgroundMusic = new Audio(`${REMOTE_ASSET_BASE}assets/music/mapmusic.mp3`);
+      const grassFootsteps = new Audio(`${REMOTE_ASSET_BASE}assets/sounds/grasswalk.mp3`);
+      const pathFootsteps = new Audio(`${REMOTE_ASSET_BASE}assets/sounds/pathwalk.mp3`);
 
       let audioInitialized = false;
       let activeFootsteps = null;
@@ -597,7 +595,6 @@
 
       updateMusicToggleLabel();
 
-      
       function primeFootstep(audio) {
         audio.loop = true;
         audio.play().then(() => {
@@ -652,40 +649,54 @@
         }
       }
 
-      async function loadLevel(url) {
-        const resolved = new URL(url, import.meta.url);
-        let fetchError = null;
+       async function tryLoadLevel(source) {
+        const resolved = new URL(source, import.meta.url);
 
-        if (resolved.protocol !== "file:") {
-          try {
-            const response = await fetch(resolved.href, { cache: "no-store" });
-            if (!response.ok) {
-              throw new Error(`Failed to load level: ${response.status} ${response.statusText}`);
-            }
-            const data = await response.json();
-            return data;
-          } catch (error) {
-            fetchError = error;
-          }
+        if (resolved.protocol === "file:") {
+          const module = await import(resolved.href, { assert: { type: "json" } });
+          return { data: module.default, origin: resolved.href };
         }
 
-        if (resolved.protocol === "file:" || fetchError) {
-          try {
-            const module = await import(resolved.href, { assert: { type: "json" } });
-            return module.default;
-          } catch (importError) {
-            if (fetchError) {
-              throw fetchError;
-            }
-            throw importError;
-          }
+        const response = await fetch(resolved.href, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`Request failed with ${response.status} ${response.statusText}`);
+          
         }
 
-        throw new Error(`Failed to resolve level from ${resolved.href}`);
+        try {
+          const data = await response.json();
+          return { data, origin: resolved.href };
+        } catch (error) {
+          throw new Error(`Failed to parse JSON from ${resolved.href}: ${error.message}`);
+        }
       }
 
-      async function buildLevel(url) {
-        const data = await loadLevel(url);
+      async function loadLevel(sources) {
+        const attempts = Array.isArray(sources) ? sources : [sources];
+        const errors = [];
+
+        for (const source of attempts) {
+          try {
+            const result = await tryLoadLevel(source);
+            console.info(`Loaded level data from ${result.origin}`);
+            return result;
+          } catch (error) {
+            console.warn(`Failed to load level from ${source}:`, error);
+            errors.push({ source, error });
+          }
+        }
+
+        const failure = new Error(
+          `Unable to load level data. Attempts: ${errors
+            .map(({ source, error }) => `${source} (${error.message})`)
+            .join("; ")}`
+        );
+        failure.attempts = errors;
+        throw failure;
+      }
+
+      async function buildLevel(sources) {
+        const { data } = await loadLevel(sources);
 
         const tileWorldSize = data.tileWorldSize ?? data.tileSize ?? 32;
         const width = data.width ?? 0;
@@ -994,16 +1005,17 @@
           scene.add(shrub);
         }
       }
- 
-        const LEVEL_URL =
-        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/levels/emeraldisle.json";
+       const LEVEL_SOURCES = [
+        `${REMOTE_ASSET_BASE}levels/emeraldisle.json`,
+        "./levels/emeraldisle.json"
+      ];
 
       async function initializeLevel() {
         try {
           loadError.textContent = "";
           loadError.classList.remove("visible");
 
-          const data = await buildLevel(LEVEL_URL);
+          const data = await buildLevel(LEVEL_SOURCES);
           setupBuildings(data);
           setupShowring(data);
           scatterShrubs();
@@ -1020,7 +1032,7 @@
           animate();
         }
       }
-
+        
       function animate() {
         requestAnimationFrame(animate);
         const delta = clock.getDelta();
