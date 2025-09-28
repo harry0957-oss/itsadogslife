@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -358,9 +358,11 @@
     <div id="status" aria-live="polite"></div>
 
     <div class="export-buttons">
+      <button class="secondary" id="loadJson">Load Layout JSON</button>
       <button class="primary" id="openLevel">Open Level Page</button>
       <button class="secondary" id="downloadJson">Download Layout JSON</button>
     </div>
+    <input type="file" id="loadJsonInput" accept="application/json" hidden />
   </section>
 
   <section class="map-wrapper">
@@ -419,6 +421,20 @@
     const tileTemplate = document.getElementById('tileTemplate');
     const brushContainer = document.getElementById('brushOptions');
     const signInput = document.getElementById('signText');
+
+    const baseTypes = new Set(['sea', 'land']);
+    const overlayTypes = new Set([
+      'none',
+      'grass',
+      'path',
+      'house',
+      'vets',
+      'dog-training',
+      'dog-groomers',
+      'dog-show',
+      'pet-shop',
+      'sign'
+    ]);
 
     const state = [];
     const tileElements = [];
@@ -650,6 +666,73 @@
       URL.revokeObjectURL(link.href);
     }
 
+    function loadJsonFromFile(file) {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          applyLayout(parsed);
+          updateStatus(`Loaded layout from ${file.name}.`);
+        } catch (error) {
+          console.error('Failed to load layout', error);
+          const message = error instanceof Error ? error.message : 'Invalid JSON file.';
+          updateStatus(`Unable to load layout: ${message}`);
+        }
+      });
+      reader.readAsText(file);
+    }
+
+    function applyLayout(layout) {
+      if (!layout || typeof layout !== 'object') {
+        throw new Error('Layout must be an object.');
+      }
+      const size = Number(layout.size);
+      if (!Number.isInteger(size) || size < 6 || size > 50) {
+        throw new Error('Layout size out of bounds.');
+      }
+      const tiles = layout.tiles;
+      if (!Array.isArray(tiles) || tiles.length !== size) {
+        throw new Error('Tiles array does not match layout size.');
+      }
+
+      gridSize = size;
+      createState(gridSize);
+
+      for (let y = 0; y < gridSize; y++) {
+        const row = tiles[y];
+        if (!Array.isArray(row) || row.length !== gridSize) {
+          throw new Error('Tile rows must match layout size.');
+        }
+        for (let x = 0; x < gridSize; x++) {
+          state[y][x] = sanitizeTile(row[x]);
+        }
+      }
+
+      document.getElementById('gridSize').value = gridSize;
+      renderGrid();
+      mouseDown = false;
+    }
+
+    function sanitizeTile(tile) {
+      const safeBase = baseTypes.has(tile?.base) ? tile.base : 'sea';
+      let safeOverlay = overlayTypes.has(tile?.overlay) ? tile.overlay : 'none';
+      let safeSign = '';
+
+      if (safeOverlay !== 'none' && safeBase !== 'land') {
+        safeOverlay = 'none';
+      }
+
+      if (safeOverlay === 'sign') {
+        safeSign = typeof tile?.signText === 'string' ? tile.signText.slice(0, 32).trim() : '';
+      }
+
+      return {
+        base: safeOverlay === 'none' ? safeBase : 'land',
+        overlay: safeOverlay,
+        signText: safeSign
+      };
+    }
+
     function openLevelPage() {
       const levelHtml = generateLevelHtml();
       const levelWindow = window.open('', '_blank');
@@ -768,6 +851,22 @@
 
     document.getElementById('resizeGrid').addEventListener('click', resizeGrid);
     document.getElementById('downloadJson').addEventListener('click', exportJson);
+    document.getElementById('loadJson').addEventListener('click', () => {
+      document.getElementById('loadJsonInput').click();
+    });
+    document.getElementById('loadJsonInput').addEventListener('change', event => {
+      const [file] = event.target.files || [];
+      if (!file) return;
+      const isJsonType = file.type === 'application/json';
+      const isJsonName = file.name?.toLowerCase().endsWith('.json');
+      if (file.type && !isJsonType && !isJsonName) {
+        updateStatus('Please choose a JSON layout file.');
+        event.target.value = '';
+        return;
+      }
+      loadJsonFromFile(file);
+      event.target.value = '';
+    });
     document.getElementById('openLevel').addEventListener('click', openLevelPage);
     gridElement.addEventListener('pointerleave', () => (mouseDown = false));
 
