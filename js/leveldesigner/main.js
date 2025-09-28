@@ -1,7 +1,8 @@
-import { DESIGN_MODES, TILE_SIZE, BRUSH_OPTIONS, DEFAULT_GRID_SIZE, GRID_LIMITS } from './modes.js';
+import { createDesignModes, TILE_SIZE, BRUSH_OPTIONS, DEFAULT_GRID_SIZE, GRID_LIMITS } from './modes.js';
 import { createGrid, cloneGrid } from './state.js';
 import { updateTileAppearance } from './rendering.js';
 import { applyBrush } from './tools.js';
+import { loadTileMetadata } from '../data/tile-metadata.js';
 
 const toolList = document.getElementById('toolList');
 const brushContainer = document.getElementById('brushOptions');
@@ -27,10 +28,11 @@ const tileElements = [];
 const toolButtons = new Map();
 const brushButtons = new Map();
 
-let currentMode = DESIGN_MODES.town || Object.values(DESIGN_MODES)[0];
+let DESIGN_MODES = {};
+let currentMode = null;
 let gridSize = DEFAULT_GRID_SIZE;
-let state = createGrid(DEFAULT_GRID_SIZE, currentMode.defaultTile);
-let currentTool = currentMode.defaultTool;
+let state = createGrid(DEFAULT_GRID_SIZE, () => ({ base: 'sea', overlay: 'none', signText: '' }));
+let currentTool = null;
 let brushDimension = BRUSH_OPTIONS[0];
 let currentSignText = '';
 let mouseDown = false;
@@ -49,6 +51,7 @@ function ensureSnapshot(mode) {
 }
 
 function saveActiveSnapshot() {
+  if (!currentMode) return;
   const snapshot = ensureSnapshot(currentMode);
   snapshot.gridSize = gridSize;
   snapshot.state = state;
@@ -60,11 +63,12 @@ function saveActiveSnapshot() {
 function onTileUpdated(x, y) {
   const row = tileElements[y];
   const element = row && row[x];
-  if (!element) return;
+  if (!element || !currentMode) return;
   updateTileAppearance({ element, tile: state[y][x], x, y, mode: currentMode, state, gridSize });
 }
 
 function renderGrid() {
+  if (!currentMode) return;
   gridElement.innerHTML = '';
   tileElements.length = 0;
   gridElement.style.setProperty('--tile-size', `${TILE_SIZE}px`);
@@ -82,7 +86,7 @@ function renderGrid() {
       tile.dataset.y = y;
       tile.addEventListener('pointerdown', handlePointerDown);
       tile.addEventListener('pointerenter', handlePointerEnter);
-      tile.addEventListener('contextmenu', event => event.preventDefault());
+      tile.addEventListener('contextmenu', (event) => event.preventDefault());
       tileElements[y][x] = tile;
       updateTileAppearance({ element: tile, tile: tileState, x, y, mode: currentMode, state, gridSize });
       gridElement.appendChild(tile);
@@ -91,6 +95,7 @@ function renderGrid() {
 }
 
 function setActiveTool(toolId) {
+  if (!currentMode) return;
   if (!currentMode.toolsById.has(toolId)) {
     toolId = currentMode.defaultTool;
   }
@@ -106,9 +111,10 @@ function setActiveTool(toolId) {
 }
 
 function renderPalette() {
+  if (!currentMode) return;
   toolButtons.clear();
   toolList.innerHTML = '';
-  currentMode.palette.forEach(tool => {
+  currentMode.palette.forEach((tool) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'tool';
@@ -121,7 +127,7 @@ function renderPalette() {
     toolButtons.set(tool.id, button);
     toolList.appendChild(button);
   });
-  setActiveTool(currentTool);
+  setActiveTool(currentTool || currentMode.defaultTool);
 }
 
 function setBrushSize(size) {
@@ -129,14 +135,16 @@ function setBrushSize(size) {
   brushButtons.forEach((button, value) => {
     button.classList.toggle('active', value === brushDimension);
   });
-  updateStatus(`Brush size set to ${size}×${size}.`);
-  ensureSnapshot(currentMode).brushSize = brushDimension;
+  if (currentMode) {
+    updateStatus(`Brush size set to ${size}×${size}.`);
+    ensureSnapshot(currentMode).brushSize = brushDimension;
+  }
 }
 
 function renderBrushOptions() {
   brushButtons.clear();
   brushContainer.innerHTML = '';
-  BRUSH_OPTIONS.forEach(size => {
+  BRUSH_OPTIONS.forEach((size) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'brush';
@@ -157,6 +165,7 @@ function updateStatus(message) {
 }
 
 function handlePointerDown(event) {
+  if (!currentMode) return;
   event.preventDefault();
   const toolId = event.button === 2 ? 'sea' : currentTool;
   const x = Number(event.currentTarget.dataset.x);
@@ -178,7 +187,7 @@ function handlePointerDown(event) {
 }
 
 function handlePointerEnter(event) {
-  if (!mouseDown) return;
+  if (!mouseDown || !currentMode) return;
   const toolId = event.buttons === 2 ? 'sea' : currentTool;
   const x = Number(event.currentTarget.dataset.x);
   const y = Number(event.currentTarget.dataset.y);
@@ -201,6 +210,7 @@ function handlePointerUp() {
 }
 
 function resizeGrid() {
+  if (!currentMode) return;
   const requested = Number(gridSizeInput.value);
   if (!Number.isInteger(requested) || requested < GRID_LIMITS.min || requested > GRID_LIMITS.max) {
     updateStatus(currentMode.messages.gridInvalid);
@@ -216,6 +226,7 @@ function resizeGrid() {
 }
 
 function exportJson() {
+  if (!currentMode) return;
   const layout = {
     mode: currentMode.id,
     size: gridSize,
@@ -235,7 +246,9 @@ function loadJsonFromFile(file) {
     try {
       const parsed = JSON.parse(reader.result);
       applyLayout(parsed);
-      updateStatus(currentMode.messages.loadSuccess(file.name));
+      if (currentMode) {
+        updateStatus(currentMode.messages.loadSuccess(file.name));
+      }
     } catch (error) {
       console.error('Failed to load layout', error);
       const message = error instanceof Error ? error.message : 'Invalid JSON file.';
@@ -246,6 +259,7 @@ function loadJsonFromFile(file) {
 }
 
 function applyLayout(layout) {
+  if (!currentMode) return;
   if (!layout || typeof layout !== 'object') {
     throw new Error('Layout must be an object.');
   }
@@ -284,7 +298,7 @@ function applyLayout(layout) {
 }
 
 function generateLevelHtml() {
-  const snapshot = state.map(row => row.map(tile => ({ base: tile.base, overlay: tile.overlay, signText: tile.signText })));
+  const snapshot = state.map((row) => row.map((tile) => ({ base: tile.base, overlay: tile.overlay, signText: tile.signText })));
   const data = {
     modeId: currentMode.id,
     layout: { size: gridSize, tiles: snapshot },
@@ -368,6 +382,7 @@ function generateLevelHtml() {
 }
 
 function openLevelPage() {
+  if (!currentMode) return;
   const levelHtml = generateLevelHtml();
   const levelWindow = window.open('', '_blank');
   if (!levelWindow) {
@@ -379,6 +394,7 @@ function openLevelPage() {
 }
 
 function updateSignUi() {
+  if (!currentMode) return;
   const section = currentMode.signSection;
   signLegend.textContent = section.legend;
   signLabel.textContent = section.label;
@@ -388,6 +404,7 @@ function updateSignUi() {
 }
 
 function updateModeUi() {
+  if (!currentMode) return;
   designerTitle.textContent = currentMode.title;
   document.title = currentMode.title;
   designerTagline.textContent = currentMode.tagline;
@@ -399,7 +416,9 @@ function setDesignMode(modeId, { silent = false } = {}) {
   const nextMode = DESIGN_MODES[modeId];
   if (!nextMode) return;
 
-  saveActiveSnapshot();
+  if (currentMode) {
+    saveActiveSnapshot();
+  }
 
   currentMode = nextMode;
   const snapshot = ensureSnapshot(currentMode);
@@ -422,21 +441,20 @@ function setDesignMode(modeId, { silent = false } = {}) {
 
 function populateModeSelect() {
   modeSelect.innerHTML = '';
-  Object.values(DESIGN_MODES).forEach(mode => {
+  Object.values(DESIGN_MODES).forEach((mode) => {
     const option = document.createElement('option');
     option.value = mode.id;
     option.textContent = mode.label;
     modeSelect.appendChild(option);
   });
-  modeSelect.value = currentMode.id;
+  if (currentMode) {
+    modeSelect.value = currentMode.id;
+  }
 }
 
-function initialize() {
-  populateModeSelect();
-  setDesignMode(currentMode.id, { silent: true });
-  updateStatus(currentMode.instructions);
-
-  signInput.addEventListener('input', event => {
+function attachEventListeners() {
+  signInput.addEventListener('input', (event) => {
+    if (!currentMode) return;
     currentSignText = currentMode.normalizeSignText(event.target.value);
     signInput.value = currentSignText;
     ensureSnapshot(currentMode).signText = currentSignText;
@@ -445,7 +463,7 @@ function initialize() {
   resizeButton.addEventListener('click', resizeGrid);
   downloadButton.addEventListener('click', exportJson);
   loadButton.addEventListener('click', () => loadInput.click());
-  loadInput.addEventListener('change', event => {
+  loadInput.addEventListener('change', (event) => {
     const [file] = event.target.files || [];
     if (!file) return;
     const isJsonType = file.type === 'application/json';
@@ -458,11 +476,31 @@ function initialize() {
     loadJsonFromFile(file);
     event.target.value = '';
   });
+
   openLevelButton.addEventListener('click', openLevelPage);
-  modeSelect.addEventListener('change', event => setDesignMode(event.target.value));
+  modeSelect.addEventListener('change', (event) => setDesignMode(event.target.value));
   gridElement.addEventListener('pointerleave', () => {
     mouseDown = false;
   });
 }
 
-initialize();
+async function init() {
+  try {
+    updateStatus('Loading tile metadata…');
+    const metadata = await loadTileMetadata();
+    DESIGN_MODES = createDesignModes(metadata);
+    const initialMode = DESIGN_MODES.town || Object.values(DESIGN_MODES)[0];
+    if (!initialMode) {
+      throw new Error('No design modes available.');
+    }
+    populateModeSelect();
+    setDesignMode(initialMode.id, { silent: true });
+    updateStatus(initialMode.instructions);
+  } catch (error) {
+    console.error('Failed to initialise designer', error);
+    updateStatus(`Failed to load tile metadata: ${error.message}`);
+  }
+}
+
+attachEventListeners();
+init();

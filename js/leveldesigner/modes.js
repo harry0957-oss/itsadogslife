@@ -1,26 +1,9 @@
+import { NINE_SLICE_KEYS } from '../data/tile-metadata.js';
+
 const TILE_SIZE = 32;
 const BRUSH_OPTIONS = [1, 2, 4, 8];
 const DEFAULT_GRID_SIZE = 16;
 const GRID_LIMITS = { min: 6, max: 50 };
-
-const NINE_SLICE_COORDS = {
-  single: { col: 0, row: 0 },
-  topLeft: { col: 0, row: 2 },
-  top: { col: 1, row: 2 },
-  topRight: { col: 2, row: 2 },
-  left: { col: 0, row: 3 },
-  center: { col: 1, row: 3 },
-  right: { col: 2, row: 3 },
-  bottomLeft: { col: 0, row: 4 },
-  bottom: { col: 1, row: 4 },
-  bottomRight: { col: 2, row: 4 }
-};
-
-const SHORT_GRASS_VARIANTS = [
-  { col: 0, row: 5 },
-  { col: 1, row: 5 },
-  { col: 2, row: 5 }
-];
 
 function computeNineSliceKey(x, y, gridSize, matchFn) {
   const up = matchFn(x, y - 1);
@@ -40,14 +23,21 @@ function computeNineSliceKey(x, y, gridSize, matchFn) {
   return 'center';
 }
 
-function spriteLayer(sheet, frame) {
-  if (!sheet || !frame) return null;
-  const sizeX = sheet.columns * TILE_SIZE;
-  const sizeY = sheet.rows * TILE_SIZE;
+function spriteLayer(config, frame) {
+  if (!config || !frame || frame.length !== 2) return null;
+  const tileset = config.tileset;
+  if (!tileset?.src) return null;
+  const size = tileset.tileSize ?? TILE_SIZE;
+  const columns = tileset.columns ?? 1;
+  const rows = tileset.rows ?? 1;
+  const width = columns * size;
+  const height = rows * size;
+  const offsetX = frame[0] * size;
+  const offsetY = frame[1] * size;
   return {
-    image: `url(${sheet.src})`,
-    size: `${sizeX}px ${sizeY}px`,
-    position: `${-frame.col * TILE_SIZE}px ${-frame.row * TILE_SIZE}px`
+    image: `url(${tileset.src})`,
+    size: `${width}px ${height}px`,
+    position: `${-offsetX}px ${-offsetY}px`
   };
 }
 
@@ -60,7 +50,29 @@ function normalizeText(text, maxLength) {
   return text.slice(0, maxLength).trim();
 }
 
-function createTownMode() {
+function getSpriteConfig(metadata, tileId) {
+  const tile = metadata?.tiles?.[tileId];
+  if (!tile?.sprite) return null;
+  const tilesetId = tile.sprite.tileset;
+  const tileset = tilesetId ? metadata.tilesets?.[tilesetId] : null;
+  if (!tileset) return null;
+  return { tileId, tile, sprite: tile.sprite, tileset: { ...tileset, id: tilesetId } };
+}
+
+function pickFrame(config, key) {
+  if (!config?.sprite) return null;
+  const { sprite } = config;
+  if (sprite.type === 'nine-slice') {
+    const frames = sprite.frames ?? {};
+    return frames[key] ?? frames.center ?? frames.single ?? null;
+  }
+  if (sprite.type === 'single') {
+    return sprite.frame ?? null;
+  }
+  return null;
+}
+
+function createTownMode(tileMetadata) {
   const overlayEmoji = {
     none: '',
     grass: '',
@@ -85,12 +97,14 @@ function createTownMode() {
     'pet-shop': 'rgba(90, 170, 120, 0.72)'
   };
 
-  const spriteSheets = {
-    land: { src: 'assets/dirt.png', columns: 3, rows: 6 },
-    path: { src: 'assets/dirt.png', columns: 3, rows: 6 },
-    grass: { src: 'assets/grass.png', columns: 3, rows: 6 },
-    longGrass: { src: 'assets/long-grass.png', columns: 1, rows: 1 },
-    water: { src: 'assets/water.png', columns: 3, rows: 6 }
+  const sprites = {
+    land: getSpriteConfig(tileMetadata, 'land'),
+    sea: getSpriteConfig(tileMetadata, 'sea'),
+    grass: getSpriteConfig(tileMetadata, 'grass'),
+    shortGrass: getSpriteConfig(tileMetadata, 'short-grass'),
+    longGrass: getSpriteConfig(tileMetadata, 'long-grass'),
+    path: getSpriteConfig(tileMetadata, 'path'),
+    water: getSpriteConfig(tileMetadata, 'water')
   };
 
   const mode = {
@@ -152,14 +166,13 @@ function createTownMode() {
     buildingTools: new Set(['house', 'vets', 'dog-training', 'dog-groomers', 'dog-show', 'pet-shop']),
     buildingSize: 5,
     buildingTints,
-    spriteSheets,
     defaultTile: () => ({ base: 'sea', overlay: 'none', signText: '' }),
     messages: {
       needsBase: 'Claim land before placing terrain, buildings, or signs.',
       gridInvalid: 'Grid size must be between 6 and 50.',
-      resized: size => `Grid resized to ${size} × ${size}. Start shaping your land!`,
+      resized: (size) => `Grid resized to ${size} × ${size}. Start shaping your land!`,
       buildingRequirement: (label, size) => `Need a ${size}×${size} land area cleared for ${label}.`,
-      loadSuccess: file => `Loaded layout from ${file}.`
+      loadSuccess: (file) => `Loaded layout from ${file}.`
     },
     signSection: {
       legend: 'Sign Writer',
@@ -191,18 +204,18 @@ function createTownMode() {
     { id: 'sign', label: 'Sign', icon: '🪧', description: 'Add signage for directions or lore.', category: 'sign', requiresBase: 'land' }
   ];
 
-  mode.toolsById = new Map(mode.palette.map(tool => [tool.id, tool]));
+  mode.toolsById = new Map(mode.palette.map((tool) => [tool.id, tool]));
 
-  mode.normalizeSignText = text => normalizeText(text, mode.signMaxLength);
+  mode.normalizeSignText = (text) => normalizeText(text, mode.signMaxLength);
 
-  mode.getOverlaySymbol = tile => {
+  mode.getOverlaySymbol = (tile) => {
     if (tile.overlay === mode.signToolId) {
       return tile.signText || overlayEmoji[mode.signToolId] || '';
     }
     return overlayEmoji[tile.overlay] || '';
   };
 
-  mode.describeOverlay = tile => {
+  mode.describeOverlay = (tile) => {
     if (tile.overlay === 'none') return '';
     if (tile.overlay === mode.signToolId) {
       return tile.signText ? `sign “${tile.signText}”` : 'sign';
@@ -211,58 +224,41 @@ function createTownMode() {
   };
 
   mode.buildTileLayers = ({ state, gridSize, tile, x, y }) => {
-    const overlayLayers = [];
+    const layers = [];
 
     const landMatch = (nx, ny) => ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].base === 'land';
     const overlayMatch = (nx, ny, overlay) =>
       ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].overlay === overlay;
 
-    const getLandFrame = () => {
-      const key = computeNineSliceKey(x, y, gridSize, landMatch);
-      return NINE_SLICE_COORDS[key] || NINE_SLICE_COORDS.center;
-    };
+    const baseConfig = tile.base === 'sea' ? sprites.sea ?? sprites.water : sprites.land;
+    const baseKey = tile.base === 'land' ? computeNineSliceKey(x, y, gridSize, landMatch) : 'single';
+    const baseLayer = spriteLayer(baseConfig, pickFrame(baseConfig, baseKey));
 
-    const getOverlayFrame = overlay => {
-      const key = computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, overlay));
-      return NINE_SLICE_COORDS[key] || NINE_SLICE_COORDS.center;
-    };
-
-    const getShortGrassFrame = () => {
-      const index = Math.abs((x * 131 + y * 17) % SHORT_GRASS_VARIANTS.length);
-      return SHORT_GRASS_VARIANTS[index];
-    };
-
-    switch (tile.overlay) {
-      case 'grass':
-        overlayLayers.push(spriteLayer(spriteSheets.grass, getOverlayFrame('grass')));
-        break;
-      case 'long-grass':
-        overlayLayers.push(spriteLayer(spriteSheets.longGrass, getOverlayFrame('long-grass')));
-        break;
-      case 'short-grass':
-        overlayLayers.push(spriteLayer(spriteSheets.grass, getShortGrassFrame()));
-        break;
-      case 'path':
-        overlayLayers.push(spriteLayer(spriteSheets.path, getOverlayFrame('path')));
-        break;
-      case 'sign':
-        overlayLayers.push(tintLayer('rgba(150, 98, 45, 0.75)'));
-        break;
-      default:
-        if (buildingTints[tile.overlay]) {
-          overlayLayers.push(tintLayer(buildingTints[tile.overlay]));
-        }
+    const overlay = tile.overlay;
+    if (overlay === 'grass') {
+      const key = computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'grass'));
+      layers.push(spriteLayer(sprites.grass, pickFrame(sprites.grass, key)));
+    } else if (overlay === 'short-grass') {
+      layers.push(spriteLayer(sprites.shortGrass, pickFrame(sprites.shortGrass, 'single')));
+    } else if (overlay === 'long-grass') {
+      layers.push(spriteLayer(sprites.longGrass, pickFrame(sprites.longGrass, 'single')));
+    } else if (overlay === 'path') {
+      const key = computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'path'));
+      layers.push(spriteLayer(sprites.path, pickFrame(sprites.path, key)));
+    } else if (overlay === 'sign') {
+      layers.push(tintLayer('rgba(150, 98, 45, 0.75)'));
+    } else if (buildingTints[overlay]) {
+      layers.push(tintLayer(buildingTints[overlay]));
     }
 
-    const baseLayer =
-      tile.base === 'sea'
-        ? spriteLayer(spriteSheets.water, { col: 0, row: 0 })
-        : spriteLayer(spriteSheets.land, getLandFrame());
+    if (baseLayer) {
+      layers.push(baseLayer);
+    }
 
-    return overlayLayers.filter(Boolean).concat(baseLayer ? [baseLayer] : []);
+    return layers.filter(Boolean);
   };
 
-  mode.sanitizeTile = tile => {
+  mode.sanitizeTile = (tile) => {
     const safeBase = mode.baseTypes.has(tile?.base) ? tile.base : mode.defaultTile().base;
     let safeOverlay = mode.overlayTypes.has(tile?.overlay) ? tile.overlay : 'none';
     let safeSign = '';
@@ -331,14 +327,13 @@ function createInteriorMode() {
       kennel: 'rgba(140, 110, 80, 0.78)',
       sign: 'rgba(190, 160, 120, 0.78)'
     },
-    spriteSheets: {},
     defaultTile: () => ({ base: 'sea', overlay: 'none', signText: '' }),
     messages: {
       needsBase: 'Lay down Floor before placing interior details.',
       gridInvalid: 'Grid size must be between 6 and 50.',
-      resized: size => `Grid resized to ${size} × ${size}. Sketch a new floor plan!`,
+      resized: (size) => `Grid resized to ${size} × ${size}. Sketch a new floor plan!`,
       buildingRequirement: (label, size) => `Need a ${size}×${size} floor area cleared for ${label}.`,
-      loadSuccess: file => `Loaded layout from ${file}.`
+      loadSuccess: (file) => `Loaded layout from ${file}.`
     },
     signSection: {
       legend: 'Note Board',
@@ -364,18 +359,18 @@ function createInteriorMode() {
     { id: 'sign', label: 'Note', icon: '📝', description: 'Add designer notes for the room.', category: 'sign', requiresBase: 'land' }
   ];
 
-  mode.toolsById = new Map(mode.palette.map(tool => [tool.id, tool]));
+  mode.toolsById = new Map(mode.palette.map((tool) => [tool.id, tool]));
 
-  mode.normalizeSignText = text => normalizeText(text, mode.signMaxLength);
+  mode.normalizeSignText = (text) => normalizeText(text, mode.signMaxLength);
 
-  mode.getOverlaySymbol = tile => {
+  mode.getOverlaySymbol = (tile) => {
     if (tile.overlay === mode.signToolId) {
       return tile.signText || overlayEmoji[mode.signToolId] || '';
     }
     return overlayEmoji[tile.overlay] || '';
   };
 
-  mode.describeOverlay = tile => {
+  mode.describeOverlay = (tile) => {
     if (tile.overlay === 'none') return '';
     if (tile.overlay === mode.signToolId) {
       return tile.signText ? `note “${tile.signText}”` : 'note';
@@ -384,12 +379,12 @@ function createInteriorMode() {
   };
 
   mode.buildTileLayers = ({ tile }) => {
-    const overlayLayers = [];
+    const layers = [];
 
     if (mode.buildingTints[tile.overlay]) {
-      overlayLayers.push(tintLayer(mode.buildingTints[tile.overlay]));
+      layers.push(tintLayer(mode.buildingTints[tile.overlay]));
     } else if (tile.overlay === mode.signToolId) {
-      overlayLayers.push(tintLayer(mode.buildingTints[mode.signToolId]));
+      layers.push(tintLayer(mode.buildingTints[mode.signToolId]));
     }
 
     const baseLayer =
@@ -397,10 +392,11 @@ function createInteriorMode() {
         ? tintLayer('rgba(20, 24, 32, 0.85)')
         : tintLayer('rgba(120, 98, 82, 0.9)');
 
-    return overlayLayers.filter(Boolean).concat([baseLayer]);
+    layers.push(baseLayer);
+    return layers.filter(Boolean);
   };
 
-  mode.sanitizeTile = tile => {
+  mode.sanitizeTile = (tile) => {
     const safeBase = mode.baseTypes.has(tile?.base) ? tile.base : mode.defaultTile().base;
     let safeOverlay = mode.overlayTypes.has(tile?.overlay) ? tile.overlay : 'none';
     let safeSign = '';
@@ -423,9 +419,12 @@ function createInteriorMode() {
   return mode;
 }
 
-export const DESIGN_MODES = Object.freeze({
-  town: createTownMode(),
-  interior: createInteriorMode()
-});
+function createDesignModes(tileMetadata) {
+  const modes = {
+    town: createTownMode(tileMetadata),
+    interior: createInteriorMode()
+  };
+  return Object.freeze(modes);
+}
 
-export { TILE_SIZE, BRUSH_OPTIONS, DEFAULT_GRID_SIZE, GRID_LIMITS, tintLayer };
+export { TILE_SIZE, BRUSH_OPTIONS, DEFAULT_GRID_SIZE, GRID_LIMITS, createDesignModes };

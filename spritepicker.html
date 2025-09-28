@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sprite Picker</title>
+    <link rel="stylesheet" href="css/sprite-picker.css" />
+  </head>
+  <body>
+    <main>
+      <aside class="sidebar">
+        <header>
+          <h1>Sprite Picker</h1>
+          <p>Select a tile to assign sprites from the shared sheets.</p>
+        </header>
+        <label class="asset-search">
+          <input type="search" id="assetSearch" placeholder="Search tiles" aria-label="Search tiles" />
+        </label>
+        <div class="asset-list" id="assetList" role="listbox" aria-label="Available tiles"></div>
+      </aside>
+      <section class="editor" aria-live="polite">
+        <header>
+          <div>
+            <h2 id="assetTitle">Select a tile</h2>
+            <p id="assetSubtitle">Choose an item from the list to begin assigning sprites.</p>
+          </div>
+          <div class="field-group">
+            <label>
+              Tileset
+              <select id="tilesetSelect" aria-label="Select tileset" disabled></select>
+            </label>
+            <label>
+              Sprite Type
+              <div class="type-switch" role="group" aria-label="Sprite type">
+                <button type="button" data-type="none" disabled>None</button>
+                <button type="button" data-type="single" disabled>Single</button>
+                <button type="button" data-type="nine-slice" disabled>Nine-slice</button>
+              </div>
+            </label>
+          </div>
+          <div class="slice-selector" id="sliceSelector" hidden></div>
+        </header>
+        <section class="sheet-panel">
+          <div class="sheet-container" id="sheetContainer" hidden>
+            <div class="sheet-grid" id="sheetGrid" role="grid"></div>
+            <div class="sheet-overlay"></div>
+          </div>
+          <div id="sheetPlaceholder">Choose a tileset to display its sprite sheet.</div>
+        </section>
+        <footer class="summary">
+          <div class="status">
+            <span id="statusMessage">No changes yet.</span>
+            <span id="assignmentSummary"></span>
+          </div>
+          <pre id="jsonPreview" aria-label="Sprite assignment preview"></pre>
+          <div class="actions">
+            <button class="secondary" type="button" id="resetButton">Reset</button>
+            <button class="primary" type="button" id="downloadButton">Download JSON</button>
+            <button class="secondary" type="button" id="copyButton">Copy JSON</button>
+          </div>
+        </footer>
+      </section>
+    </main>
+    <script type="module" src="js/sprite-picker.js"></script>
+  </body>
+</html>
