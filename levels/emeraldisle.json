@@ -1,5189 +1,1035 @@
-{
-  "size": 32,
-  "tiles": [
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "dog-show",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "sign",
-        "signText": "The little show"
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "sign",
-        "signText": "Your home, come in relax, rest"
-      },
-      {
-        "base": "land",
-        "overlay": "house",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "house",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "sign",
-        "signText": "Go away I don't like people"
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "sign",
-        "signText": "Pupperland dog training"
-      },
-      {
-        "base": "land",
-        "overlay": "dog-training",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "sign",
-        "signText": "Emerald Isle Vets Practice"
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "vets",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "dog-groomers",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "sign",
-        "signText": "Woof and Cuts"
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "sign",
-        "signText": "Pupperland Pet Store"
-      },
-      {
-        "base": "land",
-        "overlay": "pet-shop",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "sign",
-        "signText": "The big show"
-      },
-      {
-        "base": "land",
-        "overlay": "dog-show",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "path",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "land",
-        "overlay": "grass",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      }
-    ],
-    [
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
-      },
-      {
-        "base": "sea",
-        "overlay": "none",
-        "signText": ""
+
+  "name": "Emerald Isle",
+  "tileSize": 32,
+  "tileWorldSize": 4,
+  "width": 20,
+  "height": 20,
+  "tilesets": {
+    "water": {
+      "src": "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/water.png"
+    },
+    "dirt": {
+      "src": "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/dirt.png"
+    },
+    "grass": {
+      "src": "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/grass.png"
+    }
+  },
+  "legend": {
+    "water_fill": {
+      "tileset": "water",
+      "index": 0,
+      "surface": "water"
+    },
+    "grass_fill": {
+      "tileset": "grass",
+      "index": 0,
+      "surface": "grass"
+    },
+    "path_fill": {
+      "tileset": "dirt",
+      "index": 0,
+      "surface": "path"
+    }
+  },
+  "layers": [
+    {
+      "name": "water",
+      "grid": [
+        [
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill"
+        ],
+        [
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill",
+          "water_fill"
+        ]
+      ]
+    },
+    {
+      "name": "ground",
+      "grid": [
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "path_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          "grass_fill",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ]
+    }
+  ],
+  "objects": {
+    "spawn": {
+      "tile": [
+        10,
+        10
+      ]
+    },
+    "showring": {
+      "tile": [
+        10,
+        10
+      ],
+      "radius": 12,
+      "floorRadius": 9
+    },
+    "buildings": [
+      {
+        "title": "Home",
+        "description": "Rest spot for handlers and pups.",
+        "tile": [
+          6,
+          7
+        ],
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "signOffset": [
+          0,
+          0,
+          7
+        ]
+      },
+      {
+        "title": "Pet Store",
+        "description": "Supplies, treats, and last-minute polish.",
+        "tile": [
+          13,
+          7
+        ],
+        "signOffset": [
+          0,
+          0,
+          7
+        ]
+      },
+      {
+        "title": "Veterinarian",
+        "description": "Wellness checks to keep tails wagging.",
+        "tile": [
+          6,
+          13
+        ],
+        "signOffset": [
+          0,
+          0,
+          7
+        ]
+      },
+      {
+        "title": "Dog Groomers",
+        "description": "Top coats trimmed and styled to shine.",
+        "tile": [
+          13,
+          13
+        ],
+        "signOffset": [
+          0,
+          0,
+          7
+        ]
+      },
+      {
+        "title": "Dog Club",
+        "description": "Strategy sessions and league gossip.",
+        "tile": [
+          10,
+          6
+        ],
+        "signOffset": [
+          7,
+          0,
+          0
+        ]
+      },
+      {
+        "title": "Showground",
+        "description": "Central arena for canine showcases.",
+        "tile": [
+          10,
+          14
+        ],
+        "signOffset": [
+          7,
+          0,
+          0
+        ],
+        "spawnHouse": false,
+        "collider": {
+          "halfSize": [
+            12,
+            12
+          ]
+        }
       }
     ]
-  ]
+  }
 }
