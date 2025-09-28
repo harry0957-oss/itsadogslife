@@ -660,11 +660,14 @@
         const response = await fetch(resolved.href, { cache: "no-store" });
         if (!response.ok) {
           throw new Error(`Request failed with ${response.status} ${response.statusText}`);
-          
         }
 
+        const isRawGithubCdn = resolved.hostname === "raw.githubusercontent.com";
+
         try {
-          const data = await response.json();
+          const data = isRawGithubCdn
+            ? JSON.parse(await response.text())
+            : await response.json();
           return { data, origin: resolved.href };
         } catch (error) {
           throw new Error(`Failed to parse JSON from ${resolved.href}: ${error.message}`);
