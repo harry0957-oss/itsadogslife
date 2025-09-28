@@ -1,0 +1,54 @@
+{
+  "tiles": {
+    "grass": {
+      "surface": "grass",
+      "color": "#3ca66b",
+      "collides": false
+    },
+    "path": {
+      "surface": "path",
+      "color": "#c89f5d",
+      "collides": false
+    },
+    "water": {
+      "surface": "water",
+      "color": "#2a6f97",
+      "collides": true
+    },
+    "house": {
+      "surface": "grass",
+      "color": "#f1ede0",
+      "collides": true
+    },
+    "dog-groomers": {
+      "surface": "grass",
+      "color": "#9f7aea",
+      "collides": true
+    },
+    "dog-training": {
+      "surface": "grass",
+      "color": "#f4a261",
+      "collides": true
+    },
+    "dog-show": {
+      "surface": "grass",
+      "color": "#e9d8fd",
+      "collides": true
+    },
+    "pet-shop": {
+      "surface": "grass",
+      "color": "#f6ad55",
+      "collides": true
+    },
+    "sign": {
+      "surface": "grass",
+      "color": "#f6c177",
+      "collides": false
+    },
+    "vets": {
+      "surface": "grass",
+      "color": "#fc8181",
+      "collides": true
+    }
+  }
+}
