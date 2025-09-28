@@ -702,8 +702,15 @@
         const { data } = await loadLevel(sources);
 
         const tileWorldSize = data.tileWorldSize ?? data.tileSize ?? 32;
-        const width = data.width ?? 0;
-        const height = data.height ?? 0;
+        const primaryLayer = Array.isArray(data.layers) ? data.layers[0] : null;
+        const layerGrid = primaryLayer?.grid ?? [];
+        const fallbackTiles = Array.isArray(data.tiles) ? data.tiles : [];
+        const inferredHeight =
+          data.height ?? (layerGrid.length || fallbackTiles.length || data.size || 0);
+        const inferredWidth =
+          data.width ?? (layerGrid[0]?.length || fallbackTiles[0]?.length || data.size || 0);
+        const width = inferredWidth;
+        const height = inferredHeight;
         const halfWidth = (width * tileWorldSize) / 2;
         const halfHeight = (height * tileWorldSize) / 2;
 
@@ -771,10 +778,11 @@
               if (!key) continue;
               const tileDef = legend[key];
               if (!tileDef) continue;
-              const tileset = tilesets[tileDef.tileset];
-              if (!tileset) continue;
+                           const tilesetKey = tileDef.tileset;
+              const tileset = tilesetKey ? tilesets[tilesetKey] : null;
 
               const mesh = createTileMesh({ tileset, tileDef, col, row });
+              if (!mesh) continue;
               mesh.position.y = 0;
               group.add(mesh);
 
@@ -807,35 +815,51 @@
         const geometry = new THREE.PlaneGeometry(mapState.tileWorldSize, mapState.tileWorldSize);
         geometry.attributes.uv = geometry.attributes.uv.clone();
 
-        const tileIndex = tileDef.index ?? null;
-        const frame = tileDef.frame ?? null;
-        let column = 0;
-        let tileRow = 0;
-        if (frame) {
-          column = frame[0];
-          tileRow = frame[1];
-        } else if (tileIndex !== null) {
-          column = tileIndex % tileset.columns;
-          tileRow = Math.floor(tileIndex / tileset.columns);
-        }
+        let material = null;
+        let cacheKey = null;
 
-        const du = 1 / tileset.columns;
-        const dv = 1 / tileset.rows;
-        const u0 = column * du;
-        const v0 = 1 - (tileRow + 1) * dv;
-        const uv = geometry.attributes.uv;
-        for (let i = 0; i < uv.count; i++) {
-          const u = uv.getX(i);
-          const v = uv.getY(i);
-          uv.setXY(i, u0 + u * du, v0 + v * dv);
-        }
-        uv.needsUpdate = true;
+        if (tileset) {
+          const tileIndex = tileDef.index ?? null;
+          const frame = tileDef.frame ?? null;
+          let column = 0;
+          let tileRow = 0;
+          if (frame) {
+            column = frame[0];
+            tileRow = frame[1];
+          } else if (tileIndex !== null) {
+            column = tileIndex % tileset.columns;
+            tileRow = Math.floor(tileIndex / tileset.columns);
+          }
 
-        const cacheKey = `${tileset.name}:${column},${tileRow}`;
-        let material = tileMaterialCache.get(cacheKey);
+ const du = 1 / tileset.columns;
+          const dv = 1 / tileset.rows;
+          const u0 = column * du;
+          const v0 = 1 - (tileRow + 1) * dv;
+          const uv = geometry.attributes.uv;
+          for (let i = 0; i < uv.count; i++) {
+            const u = uv.getX(i);
+            const v = uv.getY(i);
+            uv.setXY(i, u0 + u * du, v0 + v * dv);
+          }
+          uv.needsUpdate = true;
+
+          cacheKey = `${tileset.name}:${column},${tileRow}`;
+          material = tileMaterialCache.get(cacheKey);
+          if (!material) {
+            material = new THREE.MeshLambertMaterial({ map: tileset.texture, transparent: true });
+            tileMaterialCache.set(cacheKey, material);
+          }
+        } else if (tileDef.color) {
+          cacheKey = `color:${tileDef.color}`;
+          material = tileMaterialCache.get(cacheKey);
+          if (!material) {
+            material = new THREE.MeshLambertMaterial({ color: new THREE.Color(tileDef.color) });
+            tileMaterialCache.set(cacheKey, material);
+          }
+        }
+       
         if (!material) {
-          material = new THREE.MeshLambertMaterial({ map: tileset.texture, transparent: true });
-          tileMaterialCache.set(cacheKey, material);
+         return null;
         }
 
         const mesh = new THREE.Mesh(geometry, material);
