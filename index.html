@@ -1,6 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>It's a Dog's Life</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+</head>
+<body>
+<script>
+  const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    backgroundColor: '#87ceeb',
+    physics: {
+      default: 'arcade',
+      arcade: { debug: false }
+    },
+    scene: { preload, create, update }
+  };
+
+  let player;
+  let cursors;
+
+  const game = new Phaser.Game(config);
+
+  function preload() {}
+
+  function create() {
+    player = this.add.rectangle(400, 300, 40, 40, 0xff0000);
+    this.physics.add.existing(player);
+    player.body.setCollideWorldBounds(true);
+
+    cursors = this.input.keyboard.createCursorKeys();
+  }
+
+  function update() {
+    player.body.setVelocity(0);
+
+    if (cursors.left.isDown) player.body.setVelocityX(-200);
+    else if (cursors.right.isDown) player.body.setVelocityX(200);
+
+    if (cursors.up.isDown) player.body.setVelocityY(-200);
+    else if (cursors.down.isDown) player.body.setVelocityY(200);
+  }
+</script>
+</body>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>It's a Dog's Life - Topdown Prototype</title>
@@ -476,14 +523,6 @@
       handlerSprite.position.y = 0.4;
       handler.add(handlerSprite);
 
-      const handlerShadow = new THREE.Mesh(
-        new THREE.CircleGeometry(5, 32),
-        new THREE.MeshBasicMaterial({ color: 0x000000, opacity: 0.35, transparent: true })
-      );
-      handlerShadow.rotation.x = -Math.PI / 2;
-      handlerShadow.position.y = 0.05;
-      handler.add(handlerShadow);
-
       handler.position.set(-40, 0, 40);
       scene.add(handler);
 
@@ -551,7 +590,7 @@
       const speed = 42;
       const movementVector = new THREE.Vector3();
 
-      const directionRows = { up: 0, right: 1, down: 2, left: 3 };
+      const directionRows = { up: 0, left: 1, down: 2, right: 3 };
       let currentDirection = "down";
       let currentFrame = 0;
       let frameTimer = 0;
