@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>It's a Dog's Life - Topdown Prototype</title>
@@ -52,7 +52,6 @@
         box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
       }
 
-      #cameraHint,
       #prompt {
         align-self: center;
         margin-bottom: 2rem;
@@ -67,7 +66,6 @@
         transition: opacity 0.2s ease, transform 0.25s ease;
       }
 
-      #cameraHint.visible,
       #prompt.visible {
         opacity: 1;
         transform: translateY(0);
@@ -145,7 +143,6 @@
     <canvas id="scene"></canvas>
     <div id="ui">
       <div id="title">It's a Dog's Life &mdash; Showgrounds Prototype</div>
-      <div id="cameraHint">Click to control the camera. Move the mouse to look around. Press Esc to release.</div>
       <div id="prompt"></div>
     </div>
     <button id="musicToggle" type="button">Mute Music</button>
@@ -454,7 +451,8 @@
         new THREE.PlaneGeometry(14, 18),
         handlerMaterial
       );
-      handlerSprite.position.y = 9;
+      handlerSprite.rotation.x = -Math.PI / 2;
+      handlerSprite.position.y = 0.12;
       handler.add(handlerSprite);
 
       const handlerShadow = new THREE.Mesh(
@@ -469,7 +467,6 @@
       scene.add(handler);
 
       const prompt = document.getElementById("prompt");
-      const cameraHint = document.getElementById("cameraHint");
       const messagePanel = document.getElementById("messagePanel");
       const messageTitle = messagePanel.querySelector("h2");
       const messageBody = messagePanel.querySelector("p");
@@ -503,48 +500,20 @@
       }
 
       const pressedKeys = new Set();
-      const cameraState = {
-        yaw: Math.PI / 4,
-        radius: 90,
-        height: cameraHeight
-      };
-      const cameraOffset = new THREE.Vector3();
-      const cameraTarget = new THREE.Vector3();
-
-      function updateCameraHint(visible) {
-        if (visible) {
-          cameraHint.classList.add("visible");
-        } else {
-          cameraHint.classList.remove("visible");
-        }
-      }
-
-      updateCameraHint(true);
-
-      canvas.addEventListener("click", () => {
-        initializeAudio();
-        if (document.pointerLockElement !== canvas) {
-          canvas.requestPointerLock();
-        }
-      });
+      let preferredAxis = "vertical";
+      canvas.addEventListener("click", initializeAudio);
 
       window.addEventListener("pointerdown", initializeAudio, { once: true });
-
-      document.addEventListener("pointerlockchange", () => {
-        const locked = document.pointerLockElement === canvas;
-        updateCameraHint(!locked);
-      });
-
-      document.addEventListener("mousemove", (event) => {
-        if (document.pointerLockElement === canvas) {
-          const sensitivity = 0.0025;
-          cameraState.yaw -= event.movementX * sensitivity;
-          cameraState.yaw = (cameraState.yaw + Math.PI * 2) % (Math.PI * 2);
-        }
-      });
       window.addEventListener("keydown", (event) => {
         initializeAudio();
-        if (!event.repeat) pressedKeys.add(event.code);
+        if (!event.repeat) {
+          pressedKeys.add(event.code);
+          if (["ArrowLeft", "ArrowRight", "KeyA", "KeyD"].includes(event.code)) {
+            preferredAxis = "horizontal";
+          } else if (["ArrowUp", "ArrowDown", "KeyW", "KeyS"].includes(event.code)) {
+            preferredAxis = "vertical";
+          }
+        }
         if (event.code === "Enter" && currentSign) {
           showMessage(currentSign);
         }
@@ -560,7 +529,6 @@
       const clock = new THREE.Clock();
       const speed = 42;
       const movementVector = new THREE.Vector3();
-      const billboardTarget = new THREE.Vector3();
 
       const frameWidth = 0.25;
       const frameHeight = 0.25;
@@ -732,6 +700,18 @@
         if (pressedKeys.has("ArrowLeft") || pressedKeys.has("KeyA")) inputX -= 1;
         if (pressedKeys.has("ArrowRight") || pressedKeys.has("KeyD")) inputX += 1;
 
+        if (inputX !== 0 && inputZ !== 0) {
+          if (preferredAxis === "horizontal") {
+            inputZ = 0;
+          } else {
+            inputX = 0;
+          }
+        } else if (inputX !== 0) {
+          preferredAxis = "horizontal";
+        } else if (inputZ !== 0) {
+          preferredAxis = "vertical";
+        }
+
         const moving = inputX !== 0 || inputZ !== 0;
 
         if (moving) {
@@ -741,8 +721,10 @@
             updateDirection(inputZ > 0 ? "down" : "up");
           }
 
-          const length = Math.hypot(inputX, inputZ);
-          movementVector.set(inputX / length, 0, inputZ / length).multiplyScalar(speed * delta);
+          const length = Math.hypot(inputX, inputZ) || 1;
+          movementVector
+            .set(inputX / length, 0, inputZ / length)
+            .multiplyScalar(speed * delta);
           handler.position.add(movementVector);
           handler.position.x = THREE.MathUtils.clamp(handler.position.x, bounds.minX, bounds.maxX);
           handler.position.z = THREE.MathUtils.clamp(handler.position.z, bounds.minZ, bounds.maxZ);
@@ -783,17 +765,8 @@
         updateMovement(delta);
         updateInteraction();
 
-        cameraOffset.set(
-          Math.sin(cameraState.yaw) * cameraState.radius,
-          cameraState.height,
-          Math.cos(cameraState.yaw) * cameraState.radius
-        );
-        cameraTarget.copy(handler.position).add(cameraOffset);
-        camera.position.lerp(cameraTarget, 0.12);
-        camera.lookAt(handler.position.x, handler.position.y + 6, handler.position.z);
-
-        billboardTarget.set(camera.position.x, handlerSprite.position.y, camera.position.z);
-        handlerSprite.lookAt(billboardTarget);
+        camera.position.set(handler.position.x, cameraHeight, handler.position.z);
+        camera.lookAt(handler.position.x, handler.position.y, handler.position.z);
 
         renderer.render(scene, camera);
       }
