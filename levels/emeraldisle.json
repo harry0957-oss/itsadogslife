@@ -1,0 +1,1728 @@
+{
+  "name": "Custom Layout",
+  "width": 16,
+  "height": 16,
+  "tileWorldSize": 32,
+  "legend": {
+    "water": {
+      "color": "#2a6f97",
+      "surface": "water"
+    },
+    "grass": {
+      "color": "#3ca66b",
+      "surface": "grass"
+    },
+    "vets": {
+      "color": "#fc8181",
+      "surface": "grass"
+    },
+    "dog-groomers": {
+      "color": "#9f7aea",
+      "surface": "grass"
+    },
+    "path": {
+      "color": "#c89f5d",
+      "surface": "path"
+    },
+    "dog-training": {
+      "color": "#f4a261",
+      "surface": "grass"
+    },
+    "pet-shop": {
+      "color": "#f6ad55",
+      "surface": "grass"
+    },
+    "sign": {
+      "color": "#f6c177",
+      "surface": "grass"
+    },
+    "house": {
+      "color": "#f1ede0",
+      "surface": "grass"
+    },
+    "dog-show": {
+      "color": "#e9d8fd",
+      "surface": "grass"
+    }
+  },
+  "layers": [
+    {
+      "name": "ground",
+      "grid": [
+        [
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "water",
+          "water",
+          "water",
+          "grass",
+          "grass",
+          "vets",
+          "grass",
+          "grass",
+          "dog-groomers",
+          "grass",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "water",
+          "water",
+          "grass",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "grass",
+          "water",
+          "water",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "water",
+          "dog-training",
+          "path",
+          "path",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "path",
+          "path",
+          "grass",
+          "water",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "grass",
+          "grass",
+          "path",
+          "water",
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "water",
+          "grass",
+          "path",
+          "grass",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "grass",
+          "grass",
+          "path",
+          "water",
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "water",
+          "grass",
+          "path",
+          "pet-shop",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "grass",
+          "grass",
+          "path",
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "grass",
+          "grass",
+          "path",
+          "grass",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "sign",
+          "house",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "path",
+          "grass",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "grass",
+          "grass",
+          "path",
+          "grass",
+          "grass",
+          "grass",
+          "dog-show",
+          "sign",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "grass",
+          "grass",
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "grass",
+          "grass",
+          "grass",
+          "water",
+          "grass",
+          "grass",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "grass",
+          "water",
+          "water",
+          "water",
+          "grass",
+          "water",
+          "water",
+          "water",
+          "grass",
+          "water",
+          "water",
+          "water",
+          "grass",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water",
+          "water"
+        ]
+      ]
+    }
+  ],
+  "tilesets": {},
+  "objects": {
+    "spawn": {
+      "tile": [
+        3,
+        7
+      ]
+    },
+    "buildings": [
+      {
+        "tile": [
+          6,
+          1
+        ],
+        "title": "Veterinary Clinic",
+        "description": "Professional care for every pup."
+      },
+      {
+        "tile": [
+          9,
+          1
+        ],
+        "title": "Groomers",
+        "description": "Pamper dogs with the finest trims."
+      },
+      {
+        "tile": [
+          2,
+          3
+        ],
+        "title": "Training Grounds",
+        "description": "Lessons for top pups await inside."
+      },
+      {
+        "tile": [
+          13,
+          5
+        ],
+        "title": "Pet Shop",
+        "description": "Stock up on treats and toys."
+      },
+      {
+        "tile": [
+          2,
+          7
+        ],
+        "title": "Neighbourhood Home",
+        "description": "A cosy place to rest."
+      }
+    ],
+    "extraSigns": [
+      {
+        "tile": [
+          8,
+          8
+        ],
+        "title": "Your house, chill out with dogs",
+        "description": "Your house, chill out with dogs"
+      }
+    ],
+    "showring": {
+      "tile": [
+        7,
+        8
+      ],
+      "radius": 18,
+      "floorRadius": 15,
+      "height": 1.6
+    }
+  },
+  "size": 16,
+  "tiles": [
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "vets",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "dog-groomers",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "dog-training",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "pet-shop",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "sign",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "house",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "path",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "dog-show",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "sign",
+        "signText": "Your house, chill out with dogs"
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "land",
+        "overlay": "grass",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ],
+    [
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      },
+      {
+        "base": "sea",
+        "overlay": "none",
+        "signText": ""
+      }
+    ]
+  ]
+}
