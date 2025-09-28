@@ -406,9 +406,9 @@
 
       const directionRows = {
         up: 0,
-        right: 1,
+        right: 3,
         down: 2,
-        left: 3
+        left: 1
       };
       let currentDirection = "down";
       let currentFrame = 0;
@@ -567,7 +567,7 @@
           hidePrompt();
         }
       }
- const backgroundMusic = new Audio(
+      const backgroundMusic = new Audio(
         "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/assets/music/mapmusic.mp3"
       );
       const grassFootsteps = new Audio(
@@ -994,13 +994,16 @@
           scene.add(shrub);
         }
       }
+ 
+        const LEVEL_URL =
+        "https://raw.githubusercontent.com/harry0957-oss/itsadogslife/main/levels/emeraldisle.json";
 
       async function initializeLevel() {
         try {
           loadError.textContent = "";
           loadError.classList.remove("visible");
 
-          const data = await buildLevel("levels/emeraldisle.json");
+          const data = await buildLevel(LEVEL_URL);
           setupBuildings(data);
           setupShowring(data);
           scatterShrubs();
