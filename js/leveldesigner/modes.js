@@ -11,15 +11,30 @@ function computeNineSliceKey(x, y, gridSize, matchFn) {
   const left = matchFn(x - 1, y);
   const right = matchFn(x + 1, y);
 
-  if (!up && !down && !left && !right) return 'single';
-  if (!up && !left) return 'topLeft';
-  if (!up && !right) return 'topRight';
-  if (!down && !left) return 'bottomLeft';
-  if (!down && !right) return 'bottomRight';
-  if (!up) return 'top';
-  if (!down) return 'bottom';
-  if (!left) return 'left';
-  if (!right) return 'right';
+  if (!up && !down && !left && !right) {
+    return 'single';
+  }
+
+  if (!up && down) {
+    if (!left && right) return 'topLeft';
+    if (!right && left) return 'topRight';
+    return 'top';
+  }
+
+  if (!down && up) {
+    if (!left && right) return 'bottomLeft';
+    if (!right && left) return 'bottomRight';
+    return 'bottom';
+  }
+
+  if (!left && right) {
+    return 'left';
+  }
+
+  if (!right && left) {
+    return 'right';
+  }
+
   return 'center';
 }
 
