@@ -36,6 +36,7 @@ let currentTool = null;
 let brushDimension = BRUSH_OPTIONS[0];
 let currentSignText = '';
 let mouseDown = false;
+let activePointerButton = 0;
 
 function ensureSnapshot(mode) {
   if (!modeSnapshots.has(mode.id)) {
@@ -167,7 +168,9 @@ function updateStatus(message) {
 function handlePointerDown(event) {
   if (!currentMode) return;
   event.preventDefault();
-  const toolId = event.button === 2 ? 'sea' : currentTool;
+  activePointerButton = event.button;
+  const isRightClick = event.button === 2;
+  const toolId = isRightClick ? 'sea' : currentTool;
   const x = Number(event.currentTarget.dataset.x);
   const y = Number(event.currentTarget.dataset.y);
   mouseDown = true;
@@ -188,7 +191,8 @@ function handlePointerDown(event) {
 
 function handlePointerEnter(event) {
   if (!mouseDown || !currentMode) return;
-  const toolId = event.buttons === 2 ? 'sea' : currentTool;
+  const isRightClick = event.buttons ? (event.buttons & 2) === 2 : activePointerButton === 2;
+  const toolId = isRightClick ? 'sea' : currentTool;
   const x = Number(event.currentTarget.dataset.x);
   const y = Number(event.currentTarget.dataset.y);
   applyBrush({
@@ -207,6 +211,7 @@ function handlePointerEnter(event) {
 
 function handlePointerUp() {
   mouseDown = false;
+  activePointerButton = 0;
 }
 
 function resizeGrid() {
