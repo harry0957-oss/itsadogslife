@@ -5,6 +5,20 @@ const BRUSH_OPTIONS = [1, 2, 4, 8];
 const DEFAULT_GRID_SIZE = 16;
 const GRID_LIMITS = { min: 6, max: 50 };
 
+const VARIANT_LABELS = {
+  auto: 'Auto',
+  single: 'Single Tile',
+  topLeft: 'Top Left Corner',
+  top: 'Top Edge',
+  topRight: 'Top Right Corner',
+  left: 'Left Edge',
+  center: 'Center',
+  right: 'Right Edge',
+  bottomLeft: 'Bottom Left Corner',
+  bottom: 'Bottom Edge',
+  bottomRight: 'Bottom Right Corner'
+};
+
 function computeNineSliceKey(x, y, gridSize, matchFn) {
   const up = matchFn(x, y - 1);
   const down = matchFn(x, y + 1);
@@ -135,6 +149,36 @@ function pickFrame(config, key) {
   return null;
 }
 
+function variantOptionsFromConfig(config) {
+  if (!config?.sprite || config.sprite.type !== 'nine-slice') return [];
+  const frames = config.sprite.frames ?? {};
+  return NINE_SLICE_KEYS.filter((key) => key in frames).map((key) => ({
+    key,
+    label: VARIANT_LABELS[key] || key
+  }));
+}
+
+function withAutoVariant(options) {
+  if (!options.length) return [];
+  return [{ key: null, label: VARIANT_LABELS.auto }, ...options];
+}
+
+function chooseKey({ config, variant, allowedVariants, fallbackKey }) {
+  if (!config?.sprite) {
+    return 'single';
+  }
+  if (config.sprite.type !== 'nine-slice') {
+    return 'single';
+  }
+  if (typeof variant === 'string' && allowedVariants?.has(variant)) {
+    return variant;
+  }
+  if (typeof fallbackKey === 'function') {
+    return fallbackKey();
+  }
+  return 'single';
+}
+
 function createTownMode(tileMetadata) {
   const overlayEmoji = {
     none: '',
@@ -170,6 +214,20 @@ function createTownMode(tileMetadata) {
     path: getSpriteConfig(tileMetadata, 'path'),
     water: getSpriteConfig(tileMetadata, 'water')
   };
+
+  const waterSpriteConfig = sprites.water ?? sprites.sea ?? null;
+
+  const landOptions = variantOptionsFromConfig(sprites.land);
+  const waterOptions = variantOptionsFromConfig(waterSpriteConfig);
+  const grassOptions = variantOptionsFromConfig(sprites.grass);
+  const pathOptions = variantOptionsFromConfig(sprites.path);
+
+  const landVariantKeys = new Set(landOptions.map((option) => option.key));
+  const waterVariantKeys = new Set(waterOptions.map((option) => option.key));
+  const grassVariantKeys = new Set(grassOptions.map((option) => option.key));
+  const pathVariantKeys = new Set(pathOptions.map((option) => option.key));
+
+  const variantHint = 'Choose a specific tile orientation or Auto to let the tool adapt to neighbours.';
 
   const mode = {
     id: 'town',
@@ -233,7 +291,7 @@ function createTownMode(tileMetadata) {
     buildingTools: new Set(['house', 'vets', 'dog-training', 'dog-groomers', 'dog-show', 'pet-shop']),
     buildingSize: 5,
     buildingTints,
-    defaultTile: () => ({ base: 'land', overlay: 'none', signText: '' }),
+    defaultTile: () => ({ base: 'land', overlay: 'none', signText: '', baseVariant: null, overlayVariant: null }),
     messages: {
       needsBase: 'Claim land before placing terrain, buildings, or signs.',
       gridInvalid: 'Grid size must be between 6 and 50.',
@@ -279,6 +337,19 @@ function createTownMode(tileMetadata) {
     { id: 'sign', label: 'Sign', icon: '🪧', description: 'Add signage for directions or lore.', category: 'sign', requiresBase: 'land' }
   ];
 
+  function assignVariants(toolId, options, hint = variantHint) {
+    if (!Array.isArray(options) || !options.length) return;
+    const tool = mode.palette.find((entry) => entry.id === toolId);
+    if (!tool) return;
+    tool.spriteVariants = options.map((option) => ({ ...option }));
+    tool.variantHint = hint;
+  }
+
+  assignVariants('land', withAutoVariant(landOptions));
+  assignVariants('sea', withAutoVariant(waterOptions), 'Select an exact water tile to sculpt your coastline.');
+  assignVariants('grass', withAutoVariant(grassOptions));
+  assignVariants('path', withAutoVariant(pathOptions));
+
   mode.toolsById = new Map(mode.palette.map((tool) => [tool.id, tool]));
 
   mode.normalizeSignText = (text) => normalizeText(text, mode.signMaxLength);
@@ -311,52 +382,77 @@ function createTownMode(tileMetadata) {
 
     const overlay = tile.overlay;
     const useSeaBase = tile.base === 'sea' && overlay !== 'water';
-    const baseConfig =
-      useSeaBase ? sprites.sea ?? sprites.water ?? null : sprites.land ?? null;
+    const baseConfig = useSeaBase ? sprites.sea ?? sprites.water ?? null : sprites.land ?? null;
 
     let baseLayer = null;
     if (baseConfig?.sprite) {
-      const baseKey =
-        baseConfig.sprite.type === 'nine-slice'
-          ? computeNineSliceKey(x, y, gridSize, baseMatch)
-          : 'single';
+      const baseKey = chooseKey({
+        config: baseConfig,
+        variant: tile.baseVariant,
+        allowedVariants: tile.base === 'land' ? landVariantKeys : undefined,
+        fallbackKey: () =>
+          baseConfig.sprite.type === 'nine-slice'
+            ? computeNineSliceKey(x, y, gridSize, baseMatch)
+            : 'single'
+      });
       baseLayer = spriteLayer(baseConfig, pickFrame(baseConfig, baseKey));
     }
 
     const overlayLayers = [];
 
     if (overlay === 'water') {
-      const config = sprites.water ?? sprites.sea ?? null;
-      const key =
-        config?.sprite?.type === 'nine-slice'
-          ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'water'))
-          : 'single';
-      const layer = spriteLayer(config, pickFrame(config, key));
-      if (layer) overlayLayers.push(layer);
+      const config = waterSpriteConfig;
+      if (config?.sprite) {
+        const key = chooseKey({
+          config,
+          variant: tile.overlayVariant,
+          allowedVariants: waterVariantKeys,
+          fallbackKey: () =>
+            config.sprite.type === 'nine-slice'
+              ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'water'))
+              : 'single'
+        });
+        const layer = spriteLayer(config, pickFrame(config, key));
+        if (layer) overlayLayers.push(layer);
+      }
     } else if (overlay === 'grass') {
-      const key = computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'grass'));
-      const layer = spriteLayer(sprites.grass, pickFrame(sprites.grass, key));
-      if (layer) overlayLayers.push(layer);
+      const config = sprites.grass;
+      if (config?.sprite) {
+        const key = chooseKey({
+          config,
+          variant: tile.overlayVariant,
+          allowedVariants: grassVariantKeys,
+          fallbackKey: () =>
+            config.sprite.type === 'nine-slice'
+              ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'grass'))
+              : 'single'
+        });
+        const layer = spriteLayer(config, pickFrame(config, key));
+        if (layer) overlayLayers.push(layer);
+      }
     } else if (overlay === 'short-grass') {
       const config = sprites.shortGrass;
-      const key =
-        config?.sprite?.type === 'nine-slice'
-          ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'short-grass'))
-          : 'single';
-      const layer = spriteLayer(config, pickFrame(config, key));
+      const layer = spriteLayer(config, pickFrame(config, 'single'));
       if (layer) overlayLayers.push(layer);
     } else if (overlay === 'long-grass') {
       const config = sprites.longGrass;
-      const key =
-        config?.sprite?.type === 'nine-slice'
-          ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'long-grass'))
-          : 'single';
-      const layer = spriteLayer(config, pickFrame(config, key));
+      const layer = spriteLayer(config, pickFrame(config, 'single'));
       if (layer) overlayLayers.push(layer);
     } else if (overlay === 'path') {
-      const key = computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'path'));
-      const layer = spriteLayer(sprites.path, pickFrame(sprites.path, key));
-      if (layer) overlayLayers.push(layer);
+      const config = sprites.path;
+      if (config?.sprite) {
+        const key = chooseKey({
+          config,
+          variant: tile.overlayVariant,
+          allowedVariants: pathVariantKeys,
+          fallbackKey: () =>
+            config.sprite.type === 'nine-slice'
+              ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'path'))
+              : 'single'
+        });
+        const layer = spriteLayer(config, pickFrame(config, key));
+        if (layer) overlayLayers.push(layer);
+      }
     } else if (overlay === 'sign') {
       overlayLayers.push(tintLayer('rgba(150, 98, 45, 0.75)'));
     } else if (buildingTints[overlay]) {
@@ -388,10 +484,32 @@ function createTownMode(tileMetadata) {
       safeSign = mode.normalizeSignText(tile?.signText);
     }
 
+    let safeBaseVariant = null;
+    if (typeof tile?.baseVariant === 'string' && safeBase === 'land' && landVariantKeys.has(tile.baseVariant)) {
+      safeBaseVariant = tile.baseVariant;
+    }
+
+    let safeOverlayVariant = null;
+    if (typeof tile?.overlayVariant === 'string') {
+      if (safeOverlay === 'water' && waterVariantKeys.has(tile.overlayVariant)) {
+        safeOverlayVariant = tile.overlayVariant;
+      } else if (safeOverlay === 'grass' && grassVariantKeys.has(tile.overlayVariant)) {
+        safeOverlayVariant = tile.overlayVariant;
+      } else if (safeOverlay === 'path' && pathVariantKeys.has(tile.overlayVariant)) {
+        safeOverlayVariant = tile.overlayVariant;
+      }
+    }
+
+    if (safeOverlay === 'none') {
+      safeOverlayVariant = null;
+    }
+
     return {
       base: safeBase,
       overlay: safeOverlay,
-      signText: safeSign
+      signText: safeSign,
+      baseVariant: safeBaseVariant,
+      overlayVariant: safeOverlayVariant
     };
   };
 
@@ -444,7 +562,7 @@ function createInteriorMode() {
       kennel: 'rgba(140, 110, 80, 0.78)',
       sign: 'rgba(190, 160, 120, 0.78)'
     },
-    defaultTile: () => ({ base: 'land', overlay: 'none', signText: '' }),
+    defaultTile: () => ({ base: 'land', overlay: 'none', signText: '', baseVariant: null, overlayVariant: null }),
     messages: {
       needsBase: 'Lay down Floor before placing interior details.',
       gridInvalid: 'Grid size must be between 6 and 50.',
@@ -538,7 +656,9 @@ function createInteriorMode() {
     return {
       base: safeBase,
       overlay: safeOverlay,
-      signText: safeSign
+      signText: safeSign,
+      baseVariant: null,
+      overlayVariant: null
     };
   };
 
