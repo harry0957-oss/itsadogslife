@@ -22,21 +22,37 @@ const modeSelect = document.getElementById('modeSelect');
 const signLegend = document.getElementById('signLegend');
 const signLabel = document.getElementById('signLabel');
 const signHint = document.getElementById('signHint');
+const variantFieldset = document.getElementById('variantOptions');
+const variantLegend = document.getElementById('variantLegend');
+const variantList = document.getElementById('variantList');
+const variantHint = document.getElementById('variantHint');
+
+const DEFAULT_VARIANT_HINT = 'Choose a specific tile orientation or Auto to let the designer adapt it to neighbours.';
 
 const modeSnapshots = new Map();
 const tileElements = [];
 const toolButtons = new Map();
 const brushButtons = new Map();
+const variantButtons = new Map();
+const selectedVariants = new Map();
 
 let DESIGN_MODES = {};
 let currentMode = null;
 let gridSize = DEFAULT_GRID_SIZE;
-let state = createGrid(DEFAULT_GRID_SIZE, () => ({ base: 'sea', overlay: 'none', signText: '' }));
+let state = createGrid(DEFAULT_GRID_SIZE, () => ({
+  base: 'sea',
+  overlay: 'none',
+  signText: '',
+  baseVariant: null,
+  overlayVariant: null
+}));
 let currentTool = null;
 let brushDimension = BRUSH_OPTIONS[0];
 let currentSignText = '';
 let mouseDown = false;
 let activePointerButton = 0;
+
+variantFieldset.hidden = true;
 
 function ensureSnapshot(mode) {
   if (!modeSnapshots.has(mode.id)) {
@@ -45,10 +61,17 @@ function ensureSnapshot(mode) {
       state: createGrid(DEFAULT_GRID_SIZE, mode.defaultTile),
       toolId: mode.defaultTool,
       brushSize: BRUSH_OPTIONS[0],
-      signText: ''
+      signText: '',
+      variants: {}
     });
   }
   return modeSnapshots.get(mode.id);
+}
+
+function persistVariants() {
+  if (!currentMode) return;
+  const snapshot = ensureSnapshot(currentMode);
+  snapshot.variants = Object.fromEntries(selectedVariants);
 }
 
 function saveActiveSnapshot() {
@@ -59,6 +82,80 @@ function saveActiveSnapshot() {
   snapshot.toolId = currentTool;
   snapshot.brushSize = brushDimension;
   snapshot.signText = currentSignText;
+  snapshot.variants = Object.fromEntries(selectedVariants);
+}
+
+function getActiveVariant(toolId) {
+  if (!toolId) return null;
+  if (selectedVariants.has(toolId)) {
+    return selectedVariants.get(toolId);
+  }
+  return null;
+}
+
+function updateVariantButtonState(toolId) {
+  const activeVariant = getActiveVariant(toolId);
+  variantButtons.forEach((button, key) => {
+    const isActive = key === activeVariant;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
+}
+
+function setActiveVariant(toolId, variantKey, { persist = true } = {}) {
+  if (!toolId) return;
+  const normalized = typeof variantKey === 'string' ? variantKey : null;
+  selectedVariants.set(toolId, normalized);
+  if (persist) {
+    persistVariants();
+  }
+  if (toolId === currentTool) {
+    updateVariantButtonState(toolId);
+  }
+}
+
+function clearVariantOptions() {
+  variantButtons.clear();
+  variantList.innerHTML = '';
+  variantFieldset.hidden = true;
+}
+
+function renderVariantOptions() {
+  if (!currentMode) {
+    clearVariantOptions();
+    return;
+  }
+  const tool = currentMode.toolsById.get(currentTool);
+  const variants = tool?.spriteVariants;
+  if (!Array.isArray(variants) || variants.length === 0) {
+    clearVariantOptions();
+    return;
+  }
+
+  variantFieldset.hidden = false;
+  variantList.innerHTML = '';
+  variantButtons.clear();
+  variantHint.textContent = tool.variantHint || DEFAULT_VARIANT_HINT;
+  if (variantLegend && tool.label) {
+    variantLegend.textContent = `${tool.label} Sprite`;
+  }
+
+  variants.forEach((option) => {
+    const key = option.key ?? null;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'variant';
+    button.dataset.variant = key === null ? 'auto' : key;
+    button.textContent = option.label;
+    button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', () => {
+      setActiveVariant(tool.id, key);
+    });
+    variantButtons.set(key, button);
+    variantList.appendChild(button);
+  });
+
+  updateVariantButtonState(tool.id);
 }
 
 function onTileUpdated(x, y) {
@@ -108,6 +205,7 @@ function setActiveTool(toolId) {
   if (tool) {
     updateStatus(`Selected ${tool.label}. ${tool.description}`);
   }
+  renderVariantOptions();
   ensureSnapshot(currentMode).toolId = currentTool;
 }
 
@@ -173,6 +271,7 @@ function handlePointerDown(event) {
   const toolId = isRightClick ? 'sea' : currentTool;
   const x = Number(event.currentTarget.dataset.x);
   const y = Number(event.currentTarget.dataset.y);
+  const variant = getActiveVariant(toolId);
   mouseDown = true;
   applyBrush({
     mode: currentMode,
@@ -184,7 +283,8 @@ function handlePointerDown(event) {
     brushSize: brushDimension,
     onTileUpdated,
     updateStatus,
-    signText: currentSignText
+    signText: currentSignText,
+    variant
   });
   window.addEventListener('pointerup', handlePointerUp, { once: true });
 }
@@ -195,6 +295,7 @@ function handlePointerEnter(event) {
   const toolId = isRightClick ? 'sea' : currentTool;
   const x = Number(event.currentTarget.dataset.x);
   const y = Number(event.currentTarget.dataset.y);
+  const variant = getActiveVariant(toolId);
   applyBrush({
     mode: currentMode,
     state,
@@ -205,7 +306,8 @@ function handlePointerEnter(event) {
     brushSize: brushDimension,
     onTileUpdated,
     updateStatus,
-    signText: currentSignText
+    signText: currentSignText,
+    variant
   });
 }
 
@@ -303,7 +405,15 @@ function applyLayout(layout) {
 }
 
 function generateLevelHtml() {
-  const snapshot = state.map((row) => row.map((tile) => ({ base: tile.base, overlay: tile.overlay, signText: tile.signText })));
+  const snapshot = state.map((row) =>
+    row.map((tile) => ({
+      base: tile.base,
+      overlay: tile.overlay,
+      signText: tile.signText,
+      baseVariant: tile.baseVariant ?? null,
+      overlayVariant: tile.overlayVariant ?? null
+    }))
+  );
   const data = {
     modeId: currentMode.id,
     layout: { size: gridSize, tiles: snapshot },
@@ -434,6 +544,17 @@ function setDesignMode(modeId, { silent = false } = {}) {
   currentSignText = snapshot.signText || '';
   signInput.value = currentSignText;
   modeSelect.value = currentMode.id;
+
+  selectedVariants.clear();
+  if (snapshot.variants && typeof snapshot.variants === 'object') {
+    Object.entries(snapshot.variants).forEach(([toolId, key]) => {
+      if (key === null || typeof key === 'string') {
+        selectedVariants.set(toolId, key);
+      }
+    });
+  } else {
+    snapshot.variants = {};
+  }
 
   updateModeUi();
   renderPalette();

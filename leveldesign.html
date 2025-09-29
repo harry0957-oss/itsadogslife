@@ -104,7 +104,19 @@
       gap: 0.5rem;
     }
 
-    button.brush {
+    .variant-options {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .variant-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.5rem;
+    }
+
+    button.brush,
+    button.variant {
       padding: 0.5rem 0.6rem;
       border-radius: 0.75rem;
       border: 1px solid rgba(158, 203, 255, 0.35);
@@ -116,13 +128,15 @@
       transition: transform 0.12s ease, background 0.12s ease, border 0.12s ease;
     }
 
-    button.brush.active {
+    button.brush.active,
+    button.variant.active {
       background: rgba(90, 142, 255, 0.25);
       border-color: rgba(90, 142, 255, 0.9);
       box-shadow: 0 0 0 1px rgba(90, 142, 255, 0.4);
     }
 
-    button.brush:hover {
+    button.brush:hover,
+    button.variant:hover {
       transform: translateY(-1px);
       background: rgba(40, 60, 90, 0.65);
     }
@@ -326,6 +340,12 @@
     <fieldset>
       <legend>Palette</legend>
       <div class="tool-list" id="toolList"></div>
+    </fieldset>
+
+    <fieldset id="variantOptions" class="variant-options" hidden>
+      <legend id="variantLegend">Sprite Variant</legend>
+      <div class="variant-list" id="variantList"></div>
+      <p class="hint" id="variantHint">Choose a specific tile orientation or Auto to let the designer adapt it to neighbours.</p>
     </fieldset>
 
     <fieldset>

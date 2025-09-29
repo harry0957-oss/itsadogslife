@@ -29,7 +29,9 @@ function applyBuilding({ mode, state, gridSize, x, y, overlay, onTileUpdated }) 
       const ny = startY + by;
       const tile = state[ny][nx];
       tile.base = mode.requiredBase;
+      tile.baseVariant = null;
       tile.overlay = overlay;
+      tile.overlayVariant = null;
       tile.signText = '';
       onTileUpdated(nx, ny);
     }
@@ -37,16 +39,36 @@ function applyBuilding({ mode, state, gridSize, x, y, overlay, onTileUpdated }) 
   return true;
 }
 
-function applyTool({ mode, state, gridSize, x, y, toolId, signText, onTileUpdated, updateStatus }) {
+function applyTool({
+  mode,
+  state,
+  gridSize,
+  x,
+  y,
+  toolId,
+  signText,
+  onTileUpdated,
+  updateStatus,
+  variant
+}) {
   const tool = mode.toolsById.get(toolId);
   if (!tool) return false;
 
   const tile = state[y][x];
+  const normalizedVariant = typeof variant === 'string' ? variant : null;
+
   switch (tool.category) {
     case 'base': {
-      const changed = tile.base !== tool.base || tile.overlay !== 'none' || tile.signText !== '';
+      const changed =
+        tile.base !== tool.base ||
+        tile.overlay !== 'none' ||
+        tile.signText !== '' ||
+        tile.baseVariant !== normalizedVariant ||
+        tile.overlayVariant !== null;
       tile.base = tool.base;
+      tile.baseVariant = normalizedVariant;
       tile.overlay = 'none';
+      tile.overlayVariant = null;
       tile.signText = '';
       if (changed) {
         onTileUpdated(x, y);
@@ -57,10 +79,15 @@ function applyTool({ mode, state, gridSize, x, y, toolId, signText, onTileUpdate
       if (tool.requiresBase && tile.base !== tool.requiresBase) {
         return false;
       }
-      if (tile.overlay === tool.overlay) {
+      if (
+        tile.overlay === tool.overlay &&
+        tile.overlayVariant === normalizedVariant &&
+        tile.signText === ''
+      ) {
         return false;
       }
       tile.overlay = tool.overlay;
+      tile.overlayVariant = normalizedVariant;
       tile.signText = '';
       onTileUpdated(x, y);
       return true;
@@ -74,6 +101,7 @@ function applyTool({ mode, state, gridSize, x, y, toolId, signText, onTileUpdate
         return false;
       }
       tile.overlay = mode.signToolId;
+      tile.overlayVariant = null;
       tile.signText = cleaned;
       onTileUpdated(x, y);
       return true;
@@ -106,7 +134,8 @@ function applyBrush({
   brushSize,
   onTileUpdated,
   updateStatus,
-  signText
+  signText,
+  variant
 }) {
   const span = mode.brushTools.has(toolId) ? Math.min(brushSize, gridSize) : 1;
   const half = Math.floor(span / 2);
@@ -132,7 +161,8 @@ function applyBrush({
         toolId,
         signText,
         onTileUpdated,
-        updateStatus
+        updateStatus,
+        variant
       });
     }
   }
