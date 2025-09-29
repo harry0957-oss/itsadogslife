@@ -142,6 +142,7 @@ function createTownMode(tileMetadata) {
     'short-grass': '',
     'long-grass': '',
     path: '',
+    water: '',
     house: '🏠',
     vets: '🐾',
     'dog-training': '🎯',
@@ -174,9 +175,9 @@ function createTownMode(tileMetadata) {
     id: 'town',
     label: 'Town Exterior',
     title: 'Town Level Designer',
-    tagline: 'Left click to paint • Right click to sea',
+    tagline: 'Left click to paint • Right click to add sea',
     instructions:
-      'Select Land to shape your island, use Grass with larger brushes to fill areas, then add paths, specialist buildings, and custom signs. Right-click turns tiles back into sea.',
+      'Select Land to shape your island, use Sea to add surrounding water, then layer on grass, paths, specialist buildings, and custom signs. Right-click paints the sea overlay.',
     defaultTool: 'land',
     signToolId: 'sign',
     signMaxLength: 32,
@@ -188,6 +189,7 @@ function createTownMode(tileMetadata) {
       'short-grass': 'short grass',
       'long-grass': 'long grass',
       path: 'path',
+      water: 'water',
       house: 'house',
       vets: 'veterinary clinic',
       'dog-training': 'dog training grounds',
@@ -204,6 +206,7 @@ function createTownMode(tileMetadata) {
       'path',
       'short-grass',
       'long-grass',
+      'water',
       'house',
       'vets',
       'dog-training',
@@ -214,6 +217,7 @@ function createTownMode(tileMetadata) {
     ]),
     brushTools: new Set(['land', 'sea', 'grass', 'short-grass', 'long-grass']),
     landOnlyTools: new Set([
+      'sea',
       'grass',
       'short-grass',
       'long-grass',
@@ -229,7 +233,7 @@ function createTownMode(tileMetadata) {
     buildingTools: new Set(['house', 'vets', 'dog-training', 'dog-groomers', 'dog-show', 'pet-shop']),
     buildingSize: 5,
     buildingTints,
-    defaultTile: () => ({ base: 'sea', overlay: 'none', signText: '' }),
+    defaultTile: () => ({ base: 'land', overlay: 'none', signText: '' }),
     messages: {
       needsBase: 'Claim land before placing terrain, buildings, or signs.',
       gridInvalid: 'Grid size must be between 6 and 50.',
@@ -253,7 +257,15 @@ function createTownMode(tileMetadata) {
 
   mode.palette = [
     { id: 'land', label: 'Land', icon: '🏝️', description: 'Claim land from the surrounding sea.', category: 'base', base: 'land' },
-    { id: 'sea', label: 'Sea', icon: '🌊', description: 'Return a tile to open water.', category: 'base', base: 'sea' },
+    {
+      id: 'sea',
+      label: 'Sea',
+      icon: '🌊',
+      description: 'Cover land tiles with the transparent water overlay.',
+      category: 'overlay',
+      overlay: 'water',
+      requiresBase: 'land'
+    },
     { id: 'grass', label: 'Grass', icon: '🌱', description: 'Add standard grass using the shared tileset.', category: 'overlay', overlay: 'grass', requiresBase: 'land' },
     { id: 'short-grass', label: 'Short Grass', icon: '🌾', description: 'Trimmed grass variant for tidy areas.', category: 'overlay', overlay: 'short-grass', requiresBase: 'land' },
     { id: 'long-grass', label: 'Long Grass', icon: '🌿', description: 'Tall grass using the long grass sheet.', category: 'overlay', overlay: 'long-grass', requiresBase: 'land' },
@@ -297,10 +309,10 @@ function createTownMode(tileMetadata) {
     const overlayMatch = (nx, ny, overlay) =>
       ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].overlay === overlay;
 
+    const overlay = tile.overlay;
+    const useSeaBase = tile.base === 'sea' && overlay !== 'water';
     const baseConfig =
-      tile.base === 'sea'
-        ? sprites.sea ?? sprites.water ?? null
-        : sprites.land ?? null;
+      useSeaBase ? sprites.sea ?? sprites.water ?? null : sprites.land ?? null;
 
     let baseLayer = null;
     if (baseConfig?.sprite) {
@@ -312,9 +324,16 @@ function createTownMode(tileMetadata) {
     }
 
     const overlayLayers = [];
-    const overlay = tile.overlay;
 
-    if (overlay === 'grass') {
+    if (overlay === 'water') {
+      const config = sprites.water ?? sprites.sea ?? null;
+      const key =
+        config?.sprite?.type === 'nine-slice'
+          ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'water'))
+          : 'single';
+      const layer = spriteLayer(config, pickFrame(config, key));
+      if (layer) overlayLayers.push(layer);
+    } else if (overlay === 'grass') {
       const key = computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'grass'));
       const layer = spriteLayer(sprites.grass, pickFrame(sprites.grass, key));
       if (layer) overlayLayers.push(layer);
@@ -348,12 +367,21 @@ function createTownMode(tileMetadata) {
   };
 
   mode.sanitizeTile = (tile) => {
-    const safeBase = mode.baseTypes.has(tile?.base) ? tile.base : mode.defaultTile().base;
-    let safeOverlay = mode.overlayTypes.has(tile?.overlay) ? tile.overlay : 'none';
+    const originalBase = tile?.base;
+    const originalOverlay = tile?.overlay === 'sea' ? 'water' : tile?.overlay;
+    let safeBase = mode.baseTypes.has(originalBase) ? originalBase : mode.defaultTile().base;
+    let safeOverlay = mode.overlayTypes.has(originalOverlay) ? originalOverlay : 'none';
     let safeSign = '';
 
+    if (safeBase === 'sea') {
+      if (safeOverlay === 'none') {
+        safeOverlay = 'water';
+      }
+      safeBase = mode.requiredBase;
+    }
+
     if (safeOverlay !== 'none' && safeBase !== mode.requiredBase) {
-      safeOverlay = 'none';
+      safeBase = mode.requiredBase;
     }
 
     if (safeOverlay === mode.signToolId) {
@@ -361,7 +389,7 @@ function createTownMode(tileMetadata) {
     }
 
     return {
-      base: safeOverlay === 'none' ? safeBase : mode.requiredBase,
+      base: safeBase,
       overlay: safeOverlay,
       signText: safeSign
     };
@@ -416,7 +444,7 @@ function createInteriorMode() {
       kennel: 'rgba(140, 110, 80, 0.78)',
       sign: 'rgba(190, 160, 120, 0.78)'
     },
-    defaultTile: () => ({ base: 'sea', overlay: 'none', signText: '' }),
+    defaultTile: () => ({ base: 'land', overlay: 'none', signText: '' }),
     messages: {
       needsBase: 'Lay down Floor before placing interior details.',
       gridInvalid: 'Grid size must be between 6 and 50.',
@@ -486,12 +514,21 @@ function createInteriorMode() {
   };
 
   mode.sanitizeTile = (tile) => {
-    const safeBase = mode.baseTypes.has(tile?.base) ? tile.base : mode.defaultTile().base;
-    let safeOverlay = mode.overlayTypes.has(tile?.overlay) ? tile.overlay : 'none';
+    const originalBase = tile?.base;
+    const originalOverlay = tile?.overlay === 'sea' ? 'water' : tile?.overlay;
+    let safeBase = mode.baseTypes.has(originalBase) ? originalBase : mode.defaultTile().base;
+    let safeOverlay = mode.overlayTypes.has(originalOverlay) ? originalOverlay : 'none';
     let safeSign = '';
 
+    if (safeBase === 'sea') {
+      if (safeOverlay === 'none') {
+        safeOverlay = 'water';
+      }
+      safeBase = mode.requiredBase;
+    }
+
     if (safeOverlay !== 'none' && safeBase !== mode.requiredBase) {
-      safeOverlay = 'none';
+      safeBase = mode.requiredBase;
     }
 
     if (safeOverlay === mode.signToolId) {
@@ -499,7 +536,7 @@ function createInteriorMode() {
     }
 
     return {
-      base: safeOverlay === 'none' ? safeBase : mode.requiredBase,
+      base: safeBase,
       overlay: safeOverlay,
       signText: safeSign
     };
