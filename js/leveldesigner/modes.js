@@ -11,31 +11,28 @@ function computeNineSliceKey(x, y, gridSize, matchFn) {
   const left = matchFn(x - 1, y);
   const right = matchFn(x + 1, y);
 
+  let key = 'center';
+
   if (!up && !down && !left && !right) {
-    return 'single';
+    key = 'single';
+  } else if (!up && down) {
+    if (!left && right) key = 'topLeft';
+    else if (!right && left) key = 'topRight';
+    else key = 'top';
+  } else if (!down && up) {
+    if (!left && right) key = 'bottomLeft';
+    else if (!right && left) key = 'bottomRight';
+    else key = 'bottom';
+  } else if (!left && right) {
+    key = 'left';
+  } else if (!right && left) {
+    key = 'right';
   }
 
-  if (!up && down) {
-    if (!left && right) return 'topLeft';
-    if (!right && left) return 'topRight';
-    return 'top';
+  if (!NINE_SLICE_KEYS.includes(key)) {
+    return 'center';
   }
-
-  if (!down && up) {
-    if (!left && right) return 'bottomLeft';
-    if (!right && left) return 'bottomRight';
-    return 'bottom';
-  }
-
-  if (!left && right) {
-    return 'left';
-  }
-
-  if (!right && left) {
-    return 'right';
-  }
-
-  return 'center';
+  return key;
 }
 
 function spriteLayer(config, frame) {
@@ -74,12 +71,63 @@ function getSpriteConfig(metadata, tileId) {
   return { tileId, tile, sprite: tile.sprite, tileset: { ...tileset, id: tilesetId } };
 }
 
+function generateFrameKeyVariants(key) {
+  if (!key) return [];
+  const variants = new Set([key]);
+
+  if (/[A-Z]/.test(key)) {
+    variants.add(key.replace(/([A-Z])/g, '-$1').toLowerCase());
+    variants.add(key.replace(/([A-Z])/g, '_$1').toLowerCase());
+  }
+
+  if (key.includes('-') || key.includes('_')) {
+    const parts = key.split(/[-_]/).filter(Boolean);
+    if (parts.length) {
+      const camel = parts
+        .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+        .join('');
+      if (camel) {
+        variants.add(camel);
+      }
+    }
+  }
+
+  if (key === 'center') {
+    variants.add('centre');
+  } else if (key === 'centre') {
+    variants.add('center');
+  } else if (key === 'single') {
+    variants.add('default');
+  } else if (key === 'default') {
+    variants.add('single');
+  }
+
+  return Array.from(variants).filter(Boolean);
+}
+
+function resolveNineSliceFrame(frames, key) {
+  if (!frames || typeof frames !== 'object') return null;
+  const variants = generateFrameKeyVariants(key);
+  for (const variant of variants) {
+    const frame = frames?.[variant];
+    if (Array.isArray(frame) && frame.length === 2) {
+      return frame;
+    }
+  }
+  return null;
+}
+
 function pickFrame(config, key) {
   if (!config?.sprite) return null;
   const { sprite } = config;
   if (sprite.type === 'nine-slice') {
     const frames = sprite.frames ?? {};
-    return frames[key] ?? frames.center ?? frames.single ?? null;
+    return (
+      resolveNineSliceFrame(frames, key) ??
+      resolveNineSliceFrame(frames, 'center') ??
+      resolveNineSliceFrame(frames, 'single') ??
+      (Array.isArray(sprite.frame) && sprite.frame.length === 2 ? sprite.frame : null)
+    );
   }
   if (sprite.type === 'single') {
     return sprite.frame ?? null;
@@ -239,42 +287,59 @@ function createTownMode(tileMetadata) {
   };
 
   mode.buildTileLayers = ({ state, gridSize, tile, x, y }) => {
-    const layers = [];
-
     const baseMatch = (nx, ny) =>
       ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].base === tile.base;
     const overlayMatch = (nx, ny, overlay) =>
       ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].overlay === overlay;
 
-    const baseConfig = tile.base === 'sea' ? sprites.sea ?? sprites.water : sprites.land;
-    let baseKey = 'single';
-    if (baseConfig?.sprite?.type === 'nine-slice') {
-      baseKey = computeNineSliceKey(x, y, gridSize, baseMatch);
-    }
-    const baseLayer = spriteLayer(baseConfig, pickFrame(baseConfig, baseKey));
+    const baseConfig =
+      tile.base === 'sea'
+        ? sprites.sea ?? sprites.water ?? null
+        : sprites.land ?? null;
 
+    let baseLayer = null;
+    if (baseConfig?.sprite) {
+      const baseKey =
+        baseConfig.sprite.type === 'nine-slice'
+          ? computeNineSliceKey(x, y, gridSize, baseMatch)
+          : 'single';
+      baseLayer = spriteLayer(baseConfig, pickFrame(baseConfig, baseKey));
+    }
+
+    const overlayLayers = [];
     const overlay = tile.overlay;
+
     if (overlay === 'grass') {
       const key = computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'grass'));
-      layers.push(spriteLayer(sprites.grass, pickFrame(sprites.grass, key)));
+      const layer = spriteLayer(sprites.grass, pickFrame(sprites.grass, key));
+      if (layer) overlayLayers.push(layer);
     } else if (overlay === 'short-grass') {
-      layers.push(spriteLayer(sprites.shortGrass, pickFrame(sprites.shortGrass, 'single')));
+      const config = sprites.shortGrass;
+      const key =
+        config?.sprite?.type === 'nine-slice'
+          ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'short-grass'))
+          : 'single';
+      const layer = spriteLayer(config, pickFrame(config, key));
+      if (layer) overlayLayers.push(layer);
     } else if (overlay === 'long-grass') {
-      layers.push(spriteLayer(sprites.longGrass, pickFrame(sprites.longGrass, 'single')));
+      const config = sprites.longGrass;
+      const key =
+        config?.sprite?.type === 'nine-slice'
+          ? computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'long-grass'))
+          : 'single';
+      const layer = spriteLayer(config, pickFrame(config, key));
+      if (layer) overlayLayers.push(layer);
     } else if (overlay === 'path') {
       const key = computeNineSliceKey(x, y, gridSize, (nx, ny) => overlayMatch(nx, ny, 'path'));
-      layers.push(spriteLayer(sprites.path, pickFrame(sprites.path, key)));
+      const layer = spriteLayer(sprites.path, pickFrame(sprites.path, key));
+      if (layer) overlayLayers.push(layer);
     } else if (overlay === 'sign') {
-      layers.push(tintLayer('rgba(150, 98, 45, 0.75)'));
+      overlayLayers.push(tintLayer('rgba(150, 98, 45, 0.75)'));
     } else if (buildingTints[overlay]) {
-      layers.push(tintLayer(buildingTints[overlay]));
+      overlayLayers.push(tintLayer(buildingTints[overlay]));
     }
 
-    if (baseLayer) {
-      layers.push(baseLayer);
-    }
-
-    return layers.filter(Boolean);
+    return [...overlayLayers, baseLayer].filter(Boolean);
   };
 
   mode.sanitizeTile = (tile) => {
