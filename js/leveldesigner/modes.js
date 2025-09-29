@@ -287,8 +287,13 @@ function createTownMode(tileMetadata) {
   };
 
   mode.buildTileLayers = ({ state, gridSize, tile, x, y }) => {
-    const baseMatch = (nx, ny) =>
-      ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].base === tile.base;
+    const defaultBase = mode.defaultTile().base;
+    const baseMatch = (nx, ny) => {
+      if (ny < 0 || ny >= gridSize || nx < 0 || nx >= gridSize) {
+        return tile.base === defaultBase;
+      }
+      return state[ny][nx].base === tile.base;
+    };
     const overlayMatch = (nx, ny, overlay) =>
       ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && state[ny][nx].overlay === overlay;
 
